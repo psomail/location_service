@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "users")
 @Data
-public class User {
+public class User extends BaseEntity {
 
     @Column(name = "username")
     private String username;
