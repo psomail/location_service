@@ -12,10 +12,12 @@
 	<artifactId>logisticplatform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>LogisticPlatform</name>
-	<description>Сourse project for Avalon</description>
+	<description>Сourse project REST API for Avalon</description>
 
 	<properties>
 		<java.version>1.8</java.version>
+		<mysql.connetor.version>8.0.19</mysql.connetor.version>
+		<jsonwebtoken.version>0.9.1</jsonwebtoken.version>
 	</properties>
 
 	<dependencies>
@@ -34,6 +36,18 @@
 		<dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.connetor.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jsonwebtoken.version}</version>
 		</dependency>
 
 		<dependency>
