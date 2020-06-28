@@ -1,4 +1,4 @@
-package ru.v.r.logisticplatform;
+package ru.logisticplatform;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

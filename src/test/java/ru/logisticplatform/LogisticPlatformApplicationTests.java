@@ -1,4 +1,4 @@
-package ru.v.r.logisticplatform;
+package ru.logisticplatform;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
