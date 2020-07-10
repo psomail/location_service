@@ -14,7 +14,6 @@ import java.util.Date;
  * @version 1.0
  */
 
-
 @MappedSuperclass
 @Data
 public class BaseEntity {
