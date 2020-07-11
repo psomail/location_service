@@ -2,7 +2,10 @@ package ru.logisticplatform.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import org.modelmapper.ModelMapper;
 import ru.logisticplatform.model.User;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * DTO class for user requests by ROLE_USER
@@ -10,7 +13,6 @@ import ru.logisticplatform.model.User;
  * @author Sergei Perminov
  * @version 1.0
  */
-
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,25 +23,19 @@ public class UserDto {
     private String lastName;
     private String email;
 
-    public User toUser(){
-        User user = new User();
-        user.setId(id);
-        user.setUsername(username);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
+    public User toUser(UserDto userDto){
+        ModelMapper modelMapper = new ModelMapper();
 
-        return user;
+        return modelMapper.map(userDto, User.class);
     }
 
     public static UserDto fromUser(User user) {
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setFirstName(user.getFirstName());
-        userDto.setLastName(user.getLastName());
-        userDto.setEmail(user.getEmail());
+        ModelMapper modelMapper = new ModelMapper();
 
-        return userDto;
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    public static List<UserDto> fromUser(List<User> users){
+        return users.stream().map(entity -> fromUser(entity)).collect(Collectors.toList());
     }
 }

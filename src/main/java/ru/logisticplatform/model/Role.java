@@ -1,7 +1,6 @@
 package ru.logisticplatform.model;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.util.List;
 

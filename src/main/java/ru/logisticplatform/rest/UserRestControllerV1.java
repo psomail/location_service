@@ -11,6 +11,7 @@ import ru.logisticplatform.model.User;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.logisticplatform.service.UserService;
+import java.util.List;
 
 /**
  * REST controller for {@link User} connected requests.
@@ -33,7 +34,9 @@ public class UserRestControllerV1 {
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long userId){
 
-        if(userId == null){
+        UserDto userDto = new UserDto();
+
+    if(userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -46,4 +49,14 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(UserDto.fromUser(user), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDto>> getAllUser(){
+        List<User>  users = this.userService.getAll();
+
+        if(users.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+    }
 }

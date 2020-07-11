@@ -1,8 +1,6 @@
 package ru.logisticplatform.service;
 
-
 import ru.logisticplatform.model.User;
-
 import java.util.List;
 
 /**

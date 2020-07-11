@@ -2,13 +2,11 @@ package ru.logisticplatform.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.logisticplatform.model.User;
 import ru.logisticplatform.repository.RoleRepository;
 import ru.logisticplatform.repository.UserRepository;
 import ru.logisticplatform.service.UserService;
-
 import java.util.List;
 
 /**
@@ -18,7 +16,6 @@ import java.util.List;
  * @author Sergei Perminov
  * @version 1.0
  */
-
 
 @Service
 @Slf4j
@@ -41,7 +38,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return null;
+        log.info("IN CustomerServiceImpl getAll");
+        return userRepository.findAll();
     }
 
     @Override
