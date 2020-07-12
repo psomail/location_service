@@ -22,8 +22,9 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
 
-    public User toUser(UserDto userDto){
+    public static User toUser(UserDto userDto){
         ModelMapper modelMapper = new ModelMapper();
 
         return modelMapper.map(userDto, User.class);
