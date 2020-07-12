@@ -2,7 +2,6 @@ package ru.logisticplatform.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.logisticplatform.model.Role;
 import ru.logisticplatform.model.Status;
@@ -50,21 +49,21 @@ public class UserServiceImpl implements UserService {
 
         User registeredUser = userRepository.save(user);
 
-        log.info("IN register - user: {} successfully registered", registeredUser);
+        log.info("IN UserServiceImpl register - user: {} successfully registered", registeredUser);
 
         return registeredUser;
     }
 
     @Override
     public List<User> getAll() {
-        log.info("IN CustomerServiceImpl getAll");
+        log.info("IN UserServiceImpl getAll");
         return userRepository.findAll();
     }
 
     @Override
     public User findByUsername(String username) {
         User user = userRepository.findByUsername(username);
-        log.info("IN findByUsername - user: {} found by username: {}", user, username);
+        log.info("IN UserServiceImpl findByUsername - user: {} found by username: {}", user, username);
 
         return user;
     }
@@ -74,16 +73,17 @@ public class UserServiceImpl implements UserService {
         User result = userRepository.findById(id).orElse(null);
 
         if (result == null){
-            log.warn("IN findById - no user found by id: {}", id);
+            log.warn("IN UserServiceImpl findById - no user found by id: {}", id);
             return null;
         }
 
-        log.info("IN findById - user: {} found by id: {}", result);
+        log.info("IN UserServiceImpl findById - user: {} found by id: {}", result);
         return result;
     }
 
     @Override
     public void delete(Long id) {
-
+        log.info("IN UserServiceImpl delete {}", id);
+        userRepository.deleteById(id);
     }
 }

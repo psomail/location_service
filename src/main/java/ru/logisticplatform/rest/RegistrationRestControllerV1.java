@@ -37,9 +37,7 @@ public class RegistrationRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        User user = userService.findByUsername(userDto.getUsername());
-
-        if(user != null){
+        if(this.userService.findByUsername(userDto.getUsername()) != null){
             return new ResponseEntity<>(HttpStatus.FOUND);
         }
 

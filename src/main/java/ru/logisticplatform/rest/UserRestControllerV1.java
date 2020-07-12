@@ -57,4 +57,20 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> deleteCustomer(@PathVariable("id") Long userId) {
+
+        if(userId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if (this.userService.findById(userId) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        this.userService.delete(userId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
