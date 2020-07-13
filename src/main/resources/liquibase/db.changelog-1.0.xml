@@ -83,6 +83,44 @@
     </changeSet>
 
     <changeSet id="1.0.3" author="serg.perm">
+        <createTable tableName="usertypes">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.4" author="serg.perm">
+        <createTable tableName="user_usertypes">
+
+            <column name="user_id" type="BIGINT">
+            </column>
+
+            <column name="usertype_id" type="BIGINT">
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.5" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_user"
@@ -92,7 +130,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="1.0.4" author="serg.perm">
+    <changeSet id="1.0.6" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_roles"
@@ -102,13 +140,43 @@
                                  referencedTableName="roles"/>
     </changeSet>
 
-    <changeSet id="1.0.5" author="serg.perm">
+    <changeSet id="1.0.7" author="serg.perm">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="user_usertypes"
+                                 constraintName="fk_user_usertypes_user"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="serg.perm">
+        <addForeignKeyConstraint baseColumnNames="usertype_id"
+                                 baseTableName="user_usertypes"
+                                 constraintName="fk_user_usertypes_usertypes"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="usertypes"/>
+    </changeSet>
+
+    <changeSet id="1.0.9" author="serg.perm">
         <insert tableName="roles">
             <column name="name" value="ROLE_USER"/>
         </insert>
 
         <insert tableName="roles">
             <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.10" author="serg.perm">
+        <insert tableName="usertypes">
+            <column name="name" value="USERTYPE_CONTRACTOR"/>
+        </insert>
+
+        <insert tableName="usertypes">
+            <column name="name" value="USERTYPE_CUSTOMER"/>
         </insert>
     </changeSet>
 

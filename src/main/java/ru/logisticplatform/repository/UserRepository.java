@@ -6,7 +6,7 @@ import ru.logisticplatform.model.User;
 /**
  * Repository interface that extends {@link JpaRepository} for class {@link User}.
  *
- * @author Eugene Suleimanov
+ * @author Sergei Perminov
  * @version 1.0
  */
 
