@@ -1,5 +1,6 @@
 package ru.logisticplatform.service;
 
+import ru.logisticplatform.model.Status;
 import ru.logisticplatform.model.User;
 import java.util.List;
 
@@ -10,9 +11,9 @@ import java.util.List;
  * @version 1.0
  */
 
-public interface UserService {
+public interface UserService{
 
-    User register(User user);
+    User signup(User user);
 
     List<User> getAll();
 
@@ -21,5 +22,8 @@ public interface UserService {
     User findById(Long id);
 
     void delete(Long id);
+
+    List<User> findByStatus(Status status);
+
 }
 

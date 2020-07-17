@@ -3,6 +3,8 @@ package ru.logisticplatform.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.logisticplatform.model.Role;
 
+import java.util.List;
+
 /**
  * Repository interface that extends {@link JpaRepository} for class {@link Role}.
  *
@@ -12,4 +14,6 @@ import ru.logisticplatform.model.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByName(String name);
-}
+
+   }
+

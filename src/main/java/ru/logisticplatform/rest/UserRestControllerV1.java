@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.UserDto;
+import ru.logisticplatform.model.Status;
 import ru.logisticplatform.model.User;
 import ru.logisticplatform.service.UserService;
 import java.util.List;
@@ -73,4 +74,35 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @RequestMapping(value = "/status/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") Status status){
+
+        if(status == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<User> users = this.userService.findByStatus(status);
+
+        if(users.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+    }
+
+//    @RequestMapping(value = "/type/{tyoe}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") String type){
+//
+//        if(status == null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<User> users = this.userService.findByStatus(status);
+//
+//        if(users.isEmpty()){
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+//    }
 }

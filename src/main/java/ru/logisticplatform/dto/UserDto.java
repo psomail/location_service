@@ -3,7 +3,9 @@ package ru.logisticplatform.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
+import ru.logisticplatform.model.Status;
 import ru.logisticplatform.model.User;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,11 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
+    private String phone;
     private String password;
+    private Status status;
+    private List<RoleDto> roles;
+    private List<UserTypeDto> userTypes;
 
     public static User toUser(UserDto userDto){
         ModelMapper modelMapper = new ModelMapper();

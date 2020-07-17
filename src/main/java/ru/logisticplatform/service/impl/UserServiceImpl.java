@@ -15,6 +15,7 @@ import ru.logisticplatform.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Implementation of {@link UserService} interface.
@@ -42,21 +43,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User register(User user) {
-        Role roleUser = roleRepository.findByName("ROLE_USER");
-        List<Role> userRoles = new ArrayList<>();
-        userRoles.add(roleUser);
+    public User signup(User user) {
+//        Role roleUser1 = roleRepository.findByName("ROLE_USER");
+//        Role roleUser2 = roleRepository.findByName("ROLE_ADMIN");
+//        List<Role> userRoles = new ArrayList<>();
+//        userRoles.add(roleUser1);
+//        userRoles.add(roleUser2);
 
-        UserType userType = userTypeRepository.findByName("USERTYPE_CONTRACTOR");
-        List<UserType> userTypes = new ArrayList<>();
-        userTypes.add(userType);
+
+
+//        UserType userType = userTypeRepository.findByName("USERTYPE_CONTRACTOR");
+//        List<UserType> userTypes = new ArrayList<>();
+//        userTypes.add(userType);
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-       // user.setPassword("ddfdf");
-        user.setRoles(userRoles);
-        user.setStatus(Status.ACTIVE);
-        user.setRoles(userRoles);
-        user.setUserTypes(userTypes);
+//        user.setStatus(Status.ACTIVE);
+//        Status st = user.getStatus();
+//        System.out.println(st);
+//
+//        user.setUserTypes(userTypes);
 
         User registeredUser = userRepository.save(user);
 
@@ -74,8 +79,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         User user = userRepository.findByUsername(username);
-        log.info("IN UserServiceImpl findByUsername - user: {} found by username: {}", user, username);
-
+        log.info("IN UserServiceImpl findByUsername - user: {} found by userName: {}", user, username);
         return user;
     }
 
@@ -96,5 +100,10 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         log.info("IN UserServiceImpl delete {}", id);
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<User> findByStatus(Status status) {
+        return userRepository.findByStatus(status);
     }
 }
