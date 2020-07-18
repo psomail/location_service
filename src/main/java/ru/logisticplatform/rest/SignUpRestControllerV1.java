@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.logisticplatform.dto.SignUpUserDto;
 import ru.logisticplatform.dto.UserDto;
+import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.User;
 import ru.logisticplatform.service.RoleService;
 import ru.logisticplatform.service.UserService;
@@ -37,7 +39,7 @@ public class SignUpRestControllerV1 {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> saveUser(@RequestBody UserDto userDto){
+    public ResponseEntity<SignUpUserDto> saveUser(@RequestBody SignUpUserDto userDto){
         HttpHeaders headers = new HttpHeaders();
 
         if (userDto == null) {
@@ -51,7 +53,7 @@ public class SignUpRestControllerV1 {
         userDto.getRoles().forEach(role -> role.setId(roleService.findByRoleName(role.getName()).getId()));
         userDto.getUserTypes().forEach(userType -> userType.setId(userTypeService.findByUserTypeName(userType.getName()).getId()));
 
-        this.userService.signUp(UserDto.toUser(userDto));
+        this.userService.signUp(ObjectMapperUtils.map(userDto, User.class));
 
         return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }

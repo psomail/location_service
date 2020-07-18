@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.logisticplatform.dto.AdminUserDto;
+import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.UserDto;
 import ru.logisticplatform.model.Status;
 import ru.logisticplatform.model.User;
@@ -36,19 +38,22 @@ public class AdminRestControllerV1 {
     }
 
     @RequestMapping(value = "/users/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDto>> getAllUser(){
+    public ResponseEntity<List<AdminUserDto>> getAllUser(){
         List<User>  users = this.userService.getAll();
 
         if(users.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+       // List<AdminUserDto> adminUsersDto = AdminUserDto.fromUserForAdmin(users);
 
+        List<AdminUserDto> adminUsersDto = ObjectMapperUtils.mapAll(users, AdminUserDto.class);
+
+        return new ResponseEntity<>(adminUsersDto, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> getUser(@PathVariable("id") Long userId){
+    public ResponseEntity<AdminUserDto> getUr(@PathVariable("id") Long userId){
 
         if(userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -60,14 +65,14 @@ public class AdminRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        UserDto userDto = UserDto.fromUser(user);
+        AdminUserDto adminUserDto = ObjectMapperUtils.map(user, AdminUserDto.class);
 
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(adminUserDto, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/users/status/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") Status status){
+    public ResponseEntity<List<AdminUserDto>> getUser(@PathVariable("status") Status status){
 
         if(status == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -79,7 +84,9 @@ public class AdminRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+        List<AdminUserDto> adminUsersDto = ObjectMapperUtils.mapAll(users, AdminUserDto.class);
+
+        return new ResponseEntity<>(adminUsersDto, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/users/{id}/status/{status}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -96,9 +103,10 @@ public class AdminRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        UserDto userDto = UserDto.fromUser(this.userService.updateUserStatus(user, status));
+        //UserDto userDto = UserDto.fromUser(this.userService.updateUserStatus(user, status));
+        AdminUserDto adminUserDto = ObjectMapperUtils.map(this.userService.updateUserStatus(user, status), AdminUserDto.class);
 
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<>(adminUserDto, HttpStatus.OK);
     }
 
 
