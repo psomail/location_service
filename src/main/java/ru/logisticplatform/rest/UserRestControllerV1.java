@@ -23,86 +23,48 @@ import java.util.List;
 public class UserRestControllerV1 {
 
     private final UserService userService;
+    private final AdminRestControllerV1 adminRestControllerV1;
 
     @Autowired
-    public UserRestControllerV1(UserService userService) {
+    public UserRestControllerV1(UserService userService, AdminRestControllerV1 adminRestControllerV1) {
         this.userService = userService;
+        this.adminRestControllerV1 = adminRestControllerV1;
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long userId){
 
-        UserDto userDto = new UserDto();
-
-    if(userId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        User user = this.userService.findById(userId);
-
-        if (user == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(UserDto.fromUser(user), HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDto>> getAllUser(){
-        List<User>  users = this.userService.getAll();
-
-        if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+//        UserDto userDto = new UserDto();
+//
+//    if(userId == null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        User user = this.userService.findById(userId);
+//
+//        if (user == null){
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        return new ResponseEntity<>(UserDto.fromUser(user), HttpStatus.OK);
+        return adminRestControllerV1.getUser(userId);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteCustomer(@PathVariable("id") Long userId) {
+    public ResponseEntity<User> deleteUser(@PathVariable("id") Long userId) {
 
         if(userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        if (this.userService.findById(userId) == null) {
+        User user = this.userService.findById(userId);
+
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        this.userService.delete(userId);
+        this.userService.updateUserStatus(user, Status.DELETED);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @RequestMapping(value = "/status/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") Status status){
-
-        if(status == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        List<User> users = this.userService.findByStatus(status);
-
-        if(users.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
-    }
-
-//    @RequestMapping(value = "/type/{tyoe}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") String type){
-//
-//        if(status == null){
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//
-//        List<User> users = this.userService.findByStatus(status);
-//
-//        if(users.isEmpty()){
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
-//    }
 }

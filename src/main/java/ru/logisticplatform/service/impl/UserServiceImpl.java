@@ -4,16 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.logisticplatform.model.Role;
 import ru.logisticplatform.model.Status;
 import ru.logisticplatform.model.User;
-import ru.logisticplatform.model.UserType;
-import ru.logisticplatform.repository.RoleRepository;
 import ru.logisticplatform.repository.UserRepository;
-import ru.logisticplatform.repository.UserTypeRepository;
 import ru.logisticplatform.service.UserService;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,44 +24,23 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final UserTypeRepository userTypeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder, UserTypeRepository userTypeRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userTypeRepository = userTypeRepository;
     }
 
     @Override
-    public User signup(User user) {
-//        Role roleUser1 = roleRepository.findByName("ROLE_USER");
-//        Role roleUser2 = roleRepository.findByName("ROLE_ADMIN");
-//        List<Role> userRoles = new ArrayList<>();
-//        userRoles.add(roleUser1);
-//        userRoles.add(roleUser2);
-
-
-
-//        UserType userType = userTypeRepository.findByName("USERTYPE_CONTRACTOR");
-//        List<UserType> userTypes = new ArrayList<>();
-//        userTypes.add(userType);
+    public User signUp(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setStatus(Status.ACTIVE);
-//        Status st = user.getStatus();
-//        System.out.println(st);
-//
-//        user.setUserTypes(userTypes);
+        User signUpUser = userRepository.save(user);
 
-        User registeredUser = userRepository.save(user);
+        log.info("IN UserServiceImpl signUp - user: {} successfully registered", signUpUser);
 
-        log.info("IN UserServiceImpl register - user: {} successfully registered", registeredUser);
-
-        return registeredUser;
+        return signUpUser;
     }
 
     @Override
@@ -94,6 +67,18 @@ public class UserServiceImpl implements UserService {
 
         log.info("IN UserServiceImpl findById - user: {} found by id: {}", result);
         return result;
+    }
+
+    @Override
+    public User updateUserStatus(User user, Status status) {
+
+        user.setStatus(status);
+
+        User updatedUser = userRepository.save(user);
+
+        log.info("IN UserServiceImpl setUserStatusToDeleted - user: {} successfully set status: {}", updatedUser, status);
+
+        return updatedUser;
     }
 
     @Override

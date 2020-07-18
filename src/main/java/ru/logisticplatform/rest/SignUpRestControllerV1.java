@@ -51,7 +51,7 @@ public class SignUpRestControllerV1 {
         userDto.getRoles().forEach(role -> role.setId(roleService.findByRoleName(role.getName()).getId()));
         userDto.getUserTypes().forEach(userType -> userType.setId(userTypeService.findByUserTypeName(userType.getName()).getId()));
 
-        this.userService.signup(UserDto.toUser(userDto));
+        this.userService.signUp(UserDto.toUser(userDto));
 
         return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }

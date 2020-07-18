@@ -1,6 +1,7 @@
 package ru.logisticplatform.rest;
 
 
+import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.logisticplatform.dto.UserDto;
+import ru.logisticplatform.model.Status;
 import ru.logisticplatform.model.User;
 import ru.logisticplatform.service.UserService;
 
@@ -62,4 +64,58 @@ public class AdminRestControllerV1 {
 
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "/users/status/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") Status status){
+
+        if(status == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        List<User> users = this.userService.findByStatus(status);
+
+        if(users.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/users/{id}/status/{status}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> updateUserStatus(@PathVariable("id") Long userId, @PathVariable("status") String userStatus) {
+
+        if(userId == null || userStatus == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        User user = this.userService.findById(userId);
+        Status status = EnumUtils.getEnumIgnoreCase(Status.class, userStatus);
+
+        if (user == null || status == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        UserDto userDto = UserDto.fromUser(this.userService.updateUserStatus(user, status));
+
+        return new ResponseEntity<>(userDto, HttpStatus.OK);
+    }
+
+
+
+//    @RequestMapping(value = "/type/{tyoe}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") String type){
+//
+//        if(status == null){
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//
+//        List<User> users = this.userService.findByStatus(status);
+//
+//        if(users.isEmpty()){
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        return new ResponseEntity<>(UserDto.fromUser(users), HttpStatus.OK);
+//    }
 }

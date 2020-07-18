@@ -13,13 +13,15 @@ import java.util.List;
 
 public interface UserService{
 
-    User signup(User user);
+    User signUp(User user);
 
     List<User> getAll();
 
     User findByUsername(String username);
 
     User findById(Long id);
+
+    User updateUserStatus(User user, Status status);
 
     void delete(Long id);
 
