@@ -1,6 +1,6 @@
 package ru.logisticplatform.service;
 
-import ru.logisticplatform.model.UserType;
+import ru.logisticplatform.model.user.UserType;
 
 /**
  * Service interface for class {@link UserType}.

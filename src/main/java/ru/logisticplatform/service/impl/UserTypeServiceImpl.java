@@ -3,7 +3,7 @@ package ru.logisticplatform.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.logisticplatform.model.UserType;
+import ru.logisticplatform.model.user.UserType;
 import ru.logisticplatform.repository.UserTypeRepository;
 import ru.logisticplatform.service.UserTypeService;
 

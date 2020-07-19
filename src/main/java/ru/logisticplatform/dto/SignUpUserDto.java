@@ -2,9 +2,7 @@ package ru.logisticplatform.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import org.modelmapper.ModelMapper;
-import ru.logisticplatform.model.Status;
-import ru.logisticplatform.model.User;
+import ru.logisticplatform.model.user.Status;
 
 import java.util.List;
 

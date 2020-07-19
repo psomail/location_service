@@ -1,6 +1,6 @@
 package ru.logisticplatform.service;
 
-import ru.logisticplatform.model.Role;
+import ru.logisticplatform.model.user.Role;
 
 /**
  * Service interface for class {@link Role}.

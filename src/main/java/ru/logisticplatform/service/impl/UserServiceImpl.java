@@ -4,12 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.logisticplatform.model.Status;
-import ru.logisticplatform.model.User;
+import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.repository.UserRepository;
 import ru.logisticplatform.service.UserService;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Implementation of {@link UserService} interface.

@@ -1,8 +1,8 @@
 package ru.logisticplatform.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.logisticplatform.model.Status;
-import ru.logisticplatform.model.User;
+import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.User;
 
 import java.util.List;
 

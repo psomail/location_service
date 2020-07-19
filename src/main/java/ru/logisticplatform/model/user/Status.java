@@ -1,4 +1,4 @@
-package ru.logisticplatform.model;
+package ru.logisticplatform.model.user;
 
 public enum Status {
     ACTIVE,

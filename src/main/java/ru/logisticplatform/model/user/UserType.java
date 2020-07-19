@@ -1,6 +1,9 @@
-package ru.logisticplatform.model;
+package ru.logisticplatform.model.user;
 
 import lombok.Data;
+import ru.logisticplatform.model.user.BaseEntity;
+import ru.logisticplatform.model.user.User;
+
 import javax.persistence.*;
 import java.util.List;
 

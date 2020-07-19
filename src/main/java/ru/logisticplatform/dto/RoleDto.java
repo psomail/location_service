@@ -4,8 +4,7 @@ package ru.logisticplatform.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import org.modelmapper.ModelMapper;
-import ru.logisticplatform.model.Role;
-import ru.logisticplatform.model.UserType;
+import ru.logisticplatform.model.user.Role;
 
 import java.util.List;
 import java.util.stream.Collectors;

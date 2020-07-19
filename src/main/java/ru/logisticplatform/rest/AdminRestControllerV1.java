@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.logisticplatform.dto.AdminUserDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.UserDto;
-import ru.logisticplatform.model.Status;
-import ru.logisticplatform.model.User;
+import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.service.UserService;
 
 import java.util.List;
@@ -44,8 +44,6 @@ public class AdminRestControllerV1 {
         if(users.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-       // List<AdminUserDto> adminUsersDto = AdminUserDto.fromUserForAdmin(users);
 
         List<AdminUserDto> adminUsersDto = ObjectMapperUtils.mapAll(users, AdminUserDto.class);
 
@@ -103,7 +101,6 @@ public class AdminRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        //UserDto userDto = UserDto.fromUser(this.userService.updateUserStatus(user, status));
         AdminUserDto adminUserDto = ObjectMapperUtils.map(this.userService.updateUserStatus(user, status), AdminUserDto.class);
 
         return new ResponseEntity<>(adminUserDto, HttpStatus.OK);

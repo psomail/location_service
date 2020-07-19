@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.UserDto;
-import ru.logisticplatform.model.Status;
-import ru.logisticplatform.model.User;
+import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.service.UserService;
 
 /**

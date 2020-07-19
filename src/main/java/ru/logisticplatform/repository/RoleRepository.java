@@ -1,9 +1,7 @@
 package ru.logisticplatform.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.logisticplatform.model.Role;
-
-import java.util.List;
+import ru.logisticplatform.model.user.Role;
 
 /**
  * Repository interface that extends {@link JpaRepository} for class {@link Role}.
