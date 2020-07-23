@@ -1,6 +1,8 @@
 package ru.logisticplatform.model.user;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,13 +17,14 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Role extends BaseEntity {
 
     @Column(name = "name")
-    private String name;
+    String name;
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
-    private List<User> users;
+    List<User> users;
 
     @Override
     public String toString() {

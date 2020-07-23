@@ -5,6 +5,7 @@
 
     <changeSet id="1.0.0" author="serg.perm">
         <createTable tableName="users">
+
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -33,7 +34,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
 
@@ -41,7 +42,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
 
@@ -59,7 +60,7 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
 
@@ -67,7 +68,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
 
@@ -97,7 +98,7 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
 
@@ -105,7 +106,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
 
@@ -125,6 +126,101 @@
     </changeSet>
 
     <changeSet id="1.0.5" author="serg.perm">
+        <createTable tableName="service">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="service_status" type="VARCHAR(25)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="version" type="BIGINT" defaultValue = "1" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_by" type="BIGINT" defaultValue = "1">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="BIGINT" defaultValue = "1">
+                <constraints nullable="false" unique="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.6" author="serg.perm">
+        <createTable tableName="transport_type">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="lenght" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="width" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="height" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="carrying" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="version" type="BIGINT" defaultValue = "1" >
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_modified_by" type="BIGINT" defaultValue = "1">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created_by" type="BIGINT" defaultValue = "1">
+                <constraints nullable="false" unique="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.7" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_user"
@@ -134,7 +230,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="1.0.6" author="serg.perm">
+    <changeSet id="1.0.8" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_roles"
@@ -144,7 +240,7 @@
                                  referencedTableName="roles"/>
     </changeSet>
 
-    <changeSet id="1.0.7" author="serg.perm">
+    <changeSet id="1.0.9" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="user_usertypes"
                                  constraintName="fk_user_usertypes_user"
@@ -154,7 +250,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="1.0.8" author="serg.perm">
+    <changeSet id="1.0.10" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="usertype_id"
                                  baseTableName="user_usertypes"
                                  constraintName="fk_user_usertypes_usertypes"
@@ -164,7 +260,7 @@
                                  referencedTableName="usertypes"/>
     </changeSet>
 
-    <changeSet id="1.0.9" author="serg.perm">
+    <changeSet id="1.0.11" author="serg.perm">
         <insert tableName="roles">
             <column name="name" value="ROLE_USER"/>
         </insert>
@@ -174,7 +270,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="1.0.10" author="serg.perm">
+    <changeSet id="1.0.12" author="serg.perm">
         <insert tableName="usertypes">
             <column name="name" value="USERTYPE_CONTRACTOR"/>
         </insert>
@@ -184,4 +280,47 @@
         </insert>
     </changeSet>
 
+    <changeSet id="1.0.13" author="serg.perm">
+        <insert tableName="transport_type">
+            <column name="name" value="Мини фургон (каблук)"/>
+            <column name="description"
+                    value="Отличное решение для доставки мелких грузов. Поможет перевезти бытовую технику и небольшое количество вещей."/>
+            <column name="lenght" value= "1.6"/>
+            <column name="width" value= "1"/>
+            <column name="height" value= "1"/>
+            <column name="volume" value= "1.6"/>
+            <column name="carrying" value= "500"/>
+        </insert>
+
+        <insert tableName="transport_type">
+            <column name="name" value="Цельнометаллицеский фургон"/>
+            <column name="description" value="Отлично подходит для перевозки не слишком крупных, но тяжёлых предметов — например, неразборной мебели. Жесткий кузов."/>
+            <column name="lenght" value= "3"/>
+            <column name="width" value= "2"/>
+            <column name="height" value= "1.8"/>
+            <column name="volume" value= "10.8"/>
+            <column name="carrying" value= "1000"/>
+        </insert>
+
+        <insert tableName="transport_type">
+            <column name="name" value="Низкий Тентованный кузов"/>
+            <column name="description" value="Небольшой и компактный транспорт. Идеально подойдет для переезда малого и среднего масштаба."/>
+            <column name="lenght" value= "3"/>
+            <column name="width" value= "2"/>
+            <column name="height" value= "1.5"/>
+            <column name="volume" value= "9"/>
+            <column name="carrying" value= "1500"/>
+        </insert>
+
+        <insert tableName="transport_type">
+            <column name="name" value="Высокий тентованный кузов"/>
+            <column name="description" value="Лучший выбор для объемного переезда и грузоперевозок в черте города."/>
+            <column name="lenght" value= "4"/>
+            <column name="width" value= "2"/>
+            <column name="height" value= "2.2"/>
+            <column name="volume" value= "17.6"/>
+            <column name="carrying" value= "1500"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>
+
