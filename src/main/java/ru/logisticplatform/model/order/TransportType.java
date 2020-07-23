@@ -5,13 +5,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.AbstractAuditableEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@Table(name = "transport_type")
+@Table(name = "transport_types")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
@@ -39,5 +38,8 @@ public class TransportType extends AbstractAuditableEntity<Service, Long> implem
 
     @Column(name = "carrying")
     Double carrying;
+
+    @OneToMany(mappedBy = "transportType", fetch = FetchType.LAZY)
+    List<Service> services;
 
 }

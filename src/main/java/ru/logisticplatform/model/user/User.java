@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.logisticplatform.model.order.Service;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -54,6 +55,9 @@ public class User extends BaseEntity implements UserDetails{
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "usertype_id", referencedColumnName = "id")})
     List<UserType> userTypes;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<Service> services;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
