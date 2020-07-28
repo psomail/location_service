@@ -4,7 +4,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.logisticplatform.model.order.Service;
+import ru.logisticplatform.model.BaseEntity;
+import ru.logisticplatform.model.order.Transportation;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -45,19 +46,23 @@ public class User extends BaseEntity implements UserDetails{
     String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
+    @JoinTable(name = "users_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     List<Role> roles;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_usertypes",
+    @JoinTable(name = "users_usertypes",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "usertype_id", referencedColumnName = "id")})
     List<UserType> userTypes;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    List<Service> services;
+    List<Transportation> transportation;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    UserStatus userStatus;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

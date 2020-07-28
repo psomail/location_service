@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.repository.UserRepository;
 import ru.logisticplatform.service.UserService;
@@ -57,25 +57,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        User result = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
 
-        if (result == null){
+        if (user == null){
             log.warn("IN UserServiceImpl findById - no user found by id: {}", id);
             return null;
         }
 
-        log.info("IN UserServiceImpl findById - user: {} found by id: {}", result);
-        return result;
+        log.info("IN UserServiceImpl findById - user: {} found by id: {}", user);
+        return user;
     }
 
     @Override
-    public User updateUserStatus(User user, Status status) {
+    public User updateUserStatus(User user, UserStatus userStatus) {
 
-        user.setStatus(status);
+        user.setUserStatus(userStatus);
 
         User updatedUser = userRepository.save(user);
 
-        log.info("IN UserServiceImpl setUserStatusToDeleted - user: {} successfully set status: {}", updatedUser, status);
+        log.info("IN UserServiceImpl setUserStatusToDeleted - user: {} successfully set userStatus: {}", updatedUser, userStatus);
 
         return updatedUser;
     }
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findByStatus(Status status) {
-        return userRepository.findByStatus(status);
+    public List<User> findByStatus(UserStatus userStatus) {
+        return userRepository.findByUserStatus(userStatus);
     }
 }

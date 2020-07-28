@@ -1,6 +1,6 @@
 package ru.logisticplatform.model.user;
 
-public enum Status {
+public enum UserStatus{
     ACTIVE,
     NOT_ACTIVE,
     DELETED

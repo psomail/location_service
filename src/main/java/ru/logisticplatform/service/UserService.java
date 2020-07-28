@@ -1,11 +1,11 @@
 package ru.logisticplatform.service;
 
-import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 import java.util.List;
 
 /**
- * Service interface for class {@link User}.
+ * Transportation interface for class {@link User}.
  *
  * @author Sergei Perminov
  * @version 1.0
@@ -21,11 +21,11 @@ public interface UserService{
 
     User findById(Long id);
 
-    User updateUserStatus(User user, Status status);
+    User updateUserStatus(User user, UserStatus userStatus);
 
     void delete(Long id);
 
-    List<User> findByStatus(Status status);
+    List<User> findByStatus(UserStatus userStatus);
 
 }
 

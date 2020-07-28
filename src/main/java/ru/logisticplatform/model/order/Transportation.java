@@ -2,20 +2,20 @@ package ru.logisticplatform.model.order;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.logisticplatform.model.AbstractAuditableEntity;
+import ru.logisticplatform.model.BaseEntity;
 import ru.logisticplatform.model.user.User;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
 
 @Entity
-@Table(name = "services")
+@Table(name = "transportations")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Service extends AbstractAuditableEntity<User, Long> implements Serializable {
+public class Transportation extends BaseEntity {
 
     @Column(name = "name")
     String name;
@@ -24,12 +24,12 @@ public class Service extends AbstractAuditableEntity<User, Long> implements Seri
     @JoinColumn(name = "user_id")
     User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "transport_type_id")
-    TransportType transportType;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "transport_type_id")
+//    TransportType transportType;
 
     @Enumerated(EnumType.STRING)
-    @Builder.Default
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    @Column(name = "status")
+    TransportationStatus transportationStatus = TransportationStatus.CREATED;
 
 }

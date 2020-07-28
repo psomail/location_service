@@ -60,10 +60,6 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
@@ -98,10 +94,6 @@
                 <constraints nullable="false" unique="true"/>
             </column>
 
-            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-
             <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
@@ -126,7 +118,7 @@
     </changeSet>
 
     <changeSet id="1.0.5" author="serg.perm">
-        <createTable tableName="services">
+        <createTable tableName="transportations">
 
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -144,11 +136,7 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="service_status" type="VARCHAR(25)" defaultValue="ACTIVE">
-                <constraints nullable="false"/>
-            </column>
-
-            <column name="version" type="BIGINT" defaultValue = "1" >
+            <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
 
@@ -156,17 +144,10 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="last_modified_by" type="BIGINT" defaultValue = "1">
-                <constraints nullable="false" unique="false"/>
-            </column>
-
             <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="created_by" type="BIGINT" defaultValue = "1">
-                <constraints nullable="false" unique="false"/>
-            </column>
         </createTable>
     </changeSet>
 
@@ -205,24 +186,12 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="version" type="BIGINT" defaultValue = "1" >
-                <constraints nullable="false"/>
-            </column>
-
             <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
             </column>
 
-            <column name="last_modified_by" type="BIGINT" defaultValue = "1">
-                <constraints nullable="false" unique="false"/>
-            </column>
-
             <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
                 <constraints nullable="false"/>
-            </column>
-
-            <column name="created_by" type="BIGINT" defaultValue = "1">
-                <constraints nullable="false" unique="false"/>
             </column>
 
         </createTable>
@@ -268,25 +237,25 @@
                                  referencedTableName="usertypes"/>
     </changeSet>
 
-    <changeSet id="1.0.11" author="serg.perm">
-        <addForeignKeyConstraint baseColumnNames="transport_type_id"
-                                 baseTableName="services"
-                                 constraintName="fk_transport_type_service"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="transport_types"/>
-    </changeSet>
+    <!--<changeSet id="1.0.11" author="serg.perm">-->
+        <!--<addForeignKeyConstraint baseColumnNames="transport_type_id"-->
+                                 <!--baseTableName="transportations"-->
+                                 <!--constraintName="fk_transport_type_service"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--referencedTableName="transport_types"/>-->
+    <!--</changeSet>-->
 
-    <changeSet id="1.0.12" author="serg.perm">
-        <addForeignKeyConstraint baseColumnNames="user_id"
-                                 baseTableName="services"
-                                 constraintName="fk_users_service"
-                                 onDelete="CASCADE"
-                                 onUpdate="RESTRICT"
-                                 referencedColumnNames="id"
-                                 referencedTableName="users"/>
-    </changeSet>
+    <!--<changeSet id="1.0.12" author="serg.perm">-->
+        <!--<addForeignKeyConstraint baseColumnNames="user_id"-->
+                                 <!--baseTableName="transportations"-->
+                                 <!--constraintName="fk_users_service"-->
+                                 <!--onDelete="CASCADE"-->
+                                 <!--onUpdate="RESTRICT"-->
+                                 <!--referencedColumnNames="id"-->
+                                 <!--referencedTableName="users"/>-->
+    <!--</changeSet>-->
 
     <changeSet id="1.0.13" author="serg.perm">
         <insert tableName="roles">

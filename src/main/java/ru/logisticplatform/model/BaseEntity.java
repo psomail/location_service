@@ -1,4 +1,4 @@
-package ru.logisticplatform.model.user;
+package ru.logisticplatform.model;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import ru.logisticplatform.model.user.UserStatus;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -38,8 +39,4 @@ public class BaseEntity {
     @Column(name = "updated", nullable = false)
     @UpdateTimestamp
     Date updated;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    Status status;
 }

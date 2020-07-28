@@ -1,7 +1,7 @@
 package ru.logisticplatform.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 
 import java.util.List;
@@ -17,6 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByUsername(String name);
 
-    List<User> findByStatus(Status status);
+    List<User> findByUserStatus(UserStatus userStatus);
 
 }

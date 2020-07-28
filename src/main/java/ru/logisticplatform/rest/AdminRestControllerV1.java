@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.logisticplatform.dto.AdminUserDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.UserDto;
-import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.service.UserService;
 
@@ -51,7 +51,7 @@ public class AdminRestControllerV1 {
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AdminUserDto> getUr(@PathVariable("id") Long userId){
+    public ResponseEntity<AdminUserDto> getUser(@PathVariable("id") Long userId){
 
         if(userId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -70,13 +70,13 @@ public class AdminRestControllerV1 {
 
 
     @RequestMapping(value = "/users/status/{status}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AdminUserDto>> getUser(@PathVariable("status") Status status){
+    public ResponseEntity<List<AdminUserDto>> getUser(@PathVariable("status") UserStatus userStatus){
 
-        if(status == null){
+        if(userStatus == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        List<User> users = this.userService.findByStatus(status);
+        List<User> users = this.userService.findByStatus(userStatus);
 
         if(users.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -95,7 +95,7 @@ public class AdminRestControllerV1 {
         }
 
         User user = this.userService.findById(userId);
-        Status status = EnumUtils.getEnumIgnoreCase(Status.class, userStatus);
+        UserStatus status = EnumUtils.getEnumIgnoreCase(UserStatus.class, userStatus);
 
         if (user == null || status == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -109,13 +109,13 @@ public class AdminRestControllerV1 {
 
 
 //    @RequestMapping(value = "/type/{tyoe}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<List<UserDto>> getUser(@PathVariable("status") String type){
+//    public ResponseEntity<List<UserDto>> getUser(@PathVariable("userStatus") String type){
 //
-//        if(status == null){
+//        if(userStatus == null){
 //            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 //        }
 //
-//        List<User> users = this.userService.findByStatus(status);
+//        List<User> users = this.userService.findByStatus(userStatus);
 //
 //        if(users.isEmpty()){
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);

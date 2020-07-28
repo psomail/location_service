@@ -1,6 +1,6 @@
 package ru.logisticplatform.model.order;
 
-public enum ServiceStatus {
+public enum TransportationStatus {
     CREATED,
     ACTIVE,
     NOT_ACTIVE,

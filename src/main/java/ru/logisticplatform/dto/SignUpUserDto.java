@@ -2,7 +2,7 @@ package ru.logisticplatform.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.UserStatus;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class SignUpUserDto {
     String email;
     String phone;
     String password;
-    Status status;
+    UserStatus userStatus;
     List<RoleDto> roles;
     List<UserTypeDto> userTypes;
 }

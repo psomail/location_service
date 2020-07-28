@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.UserDto;
-import ru.logisticplatform.model.user.Status;
+import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.service.UserService;
 
@@ -61,7 +61,7 @@ public class UserRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        this.userService.updateUserStatus(user, Status.DELETED);
+        this.userService.updateUserStatus(user, UserStatus.DELETED);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
