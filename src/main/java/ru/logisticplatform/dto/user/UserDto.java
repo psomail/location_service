@@ -1,8 +1,11 @@
-package ru.logisticplatform.dto;
+package ru.logisticplatform.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AccessLevel;
 import lombok.Data;
-import ru.logisticplatform.model.user.UserStatus;
+import lombok.experimental.FieldDefaults;
+import ru.logisticplatform.dto.user.RoleDto;
+import ru.logisticplatform.dto.user.UserTypeDto;
 
 import java.util.List;
 
@@ -13,18 +16,17 @@ import java.util.List;
  * @version 1.0
  */
 
-//@FieldDefaults(level = AccessLevel.PRIVATE)
+
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SignUpUserDto {
+public class UserDto {
     Long id;
     String username;
     String firstName;
     String lastName;
     String email;
     String phone;
-    String password;
-    UserStatus userStatus;
     List<RoleDto> roles;
     List<UserTypeDto> userTypes;
 }

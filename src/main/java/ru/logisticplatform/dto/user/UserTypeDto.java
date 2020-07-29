@@ -1,4 +1,4 @@
-package ru.logisticplatform.dto;
+package ru.logisticplatform.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

@@ -1,27 +1,25 @@
 package ru.logisticplatform.model.order;
 
-
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.BaseEntity;
+import ru.logisticplatform.model.user.User;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
-@Table(name = "transport_types")
+@Table(name = "goods")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class TransportType extends BaseEntity{
+public class Goods extends BaseEntity {
 
     @Column(name = "name")
     String name;
 
-    @Column(name = "description")
-    String description;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "goodstype_id")
+    GoodsType goodsType;
 
     @Column(name = "lenght")
     Double lenght;
@@ -38,7 +36,13 @@ public class TransportType extends BaseEntity{
     @Column(name = "carrying")
     Double carrying;
 
-    @OneToMany(mappedBy = "transportType", fetch = FetchType.LAZY)
-    List<Transportation> transportation;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "private")
+    GoodsPrivate goodsPrivate = GoodsPrivate.NO;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    User user;
+
 
 }

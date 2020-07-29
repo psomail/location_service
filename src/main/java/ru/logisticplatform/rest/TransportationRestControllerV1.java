@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.logisticplatform.dto.TransportTypeDto;
+import ru.logisticplatform.dto.order.TransportTypeDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.order.TransportType;
 import ru.logisticplatform.model.order.Transportation;

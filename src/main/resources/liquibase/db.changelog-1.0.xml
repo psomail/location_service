@@ -198,6 +198,82 @@
     </changeSet>
 
     <changeSet id="1.0.7" author="serg.perm">
+        <createTable tableName="goods">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="goodstype_id" type="BIGINT" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="lenght" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="width" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="height" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="volume" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="carrying" type="DOUBLE PRECISION">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="private" type="VARCHAR(5)" defaultValue="NO">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="user_id" type="BIGINT" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.8" author="serg.perm">
+        <createTable tableName="goodstypes">
+
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+
+            <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="created" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="1.0.9" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_user"
@@ -207,7 +283,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="1.0.8" author="serg.perm">
+    <changeSet id="1.0.10" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="role_id"
                                  baseTableName="user_roles"
                                  constraintName="fk_user_roles_roles"
@@ -217,7 +293,7 @@
                                  referencedTableName="roles"/>
     </changeSet>
 
-    <changeSet id="1.0.9" author="serg.perm">
+    <changeSet id="1.0.11" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="user_usertypes"
                                  constraintName="fk_user_usertypes_user"
@@ -227,7 +303,7 @@
                                  referencedTableName="users"/>
     </changeSet>
 
-    <changeSet id="1.0.10" author="serg.perm">
+    <changeSet id="1.0.12" author="serg.perm">
         <addForeignKeyConstraint baseColumnNames="usertype_id"
                                  baseTableName="user_usertypes"
                                  constraintName="fk_user_usertypes_usertypes"
@@ -237,27 +313,47 @@
                                  referencedTableName="usertypes"/>
     </changeSet>
 
-    <!--<changeSet id="1.0.11" author="serg.perm">-->
-        <!--<addForeignKeyConstraint baseColumnNames="transport_type_id"-->
-                                 <!--baseTableName="transportations"-->
-                                 <!--constraintName="fk_transport_type_service"-->
-                                 <!--onDelete="CASCADE"-->
-                                 <!--onUpdate="RESTRICT"-->
-                                 <!--referencedColumnNames="id"-->
-                                 <!--referencedTableName="transport_types"/>-->
-    <!--</changeSet>-->
-
-    <!--<changeSet id="1.0.12" author="serg.perm">-->
-        <!--<addForeignKeyConstraint baseColumnNames="user_id"-->
-                                 <!--baseTableName="transportations"-->
-                                 <!--constraintName="fk_users_service"-->
-                                 <!--onDelete="CASCADE"-->
-                                 <!--onUpdate="RESTRICT"-->
-                                 <!--referencedColumnNames="id"-->
-                                 <!--referencedTableName="users"/>-->
-    <!--</changeSet>-->
-
     <changeSet id="1.0.13" author="serg.perm">
+        <addForeignKeyConstraint baseColumnNames="transport_type_id"
+                                 baseTableName="transportations"
+                                 constraintName="fk_transport_type_service"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="transport_types"/>
+    </changeSet>
+
+    <changeSet id="1.0.14" author="serg.perm">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="transportations"
+                                 constraintName="fk_users_service"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1.0.15" author="serg.perm">
+        <addForeignKeyConstraint baseColumnNames="goodstype_id"
+                                 baseTableName="goods"
+                                 constraintName="fk_goodstypes_goods"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="goodstypes"/>
+    </changeSet>
+
+    <changeSet id="1.0.16" author="serg.perm">
+        <addForeignKeyConstraint baseColumnNames="user_id"
+                                 baseTableName="goods"
+                                 constraintName="fk_users_goods"
+                                 onDelete="CASCADE"
+                                 onUpdate="RESTRICT"
+                                 referencedColumnNames="id"
+                                 referencedTableName="users"/>
+    </changeSet>
+
+    <changeSet id="1.0.17" author="serg.perm">
         <insert tableName="roles">
             <column name="name" value="ROLE_USER"/>
         </insert>
@@ -267,7 +363,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="1.0.14" author="serg.perm">
+    <changeSet id="1.0.18" author="serg.perm">
         <insert tableName="usertypes">
             <column name="name" value="USERTYPE_CONTRACTOR"/>
         </insert>
@@ -277,7 +373,7 @@
         </insert>
     </changeSet>
 
-    <changeSet id="1.0.15" author="serg.perm">
+    <changeSet id="1.0.19" author="serg.perm">
         <insert tableName="transport_types">
             <column name="name" value="Мини фургон (каблук)"/>
             <column name="description"
@@ -319,5 +415,28 @@
             <column name="carrying" value= "1500"/>
         </insert>
     </changeSet>
+
+    <changeSet id="1.0.20" author="serg.perm">
+        <insert tableName="goodstypes">
+            <column name="name" value="Мебель"/>
+        </insert>
+
+        <insert tableName="goodstypes">
+            <column name="name" value="Бытовая техника"/>
+        </insert>
+
+        <insert tableName="goodstypes">
+            <column name="name" value="Растения"/>
+        </insert>
+
+        <insert tableName="goodstypes">
+            <column name="name" value="Хрупкие грузы"/>
+        </insert>
+
+        <insert tableName="goodstypes">
+            <column name="name" value="Личные вещи"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
 

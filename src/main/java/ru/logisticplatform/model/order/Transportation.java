@@ -24,9 +24,9 @@ public class Transportation extends BaseEntity {
     @JoinColumn(name = "user_id")
     User user;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "transport_type_id")
-//    TransportType transportType;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "transport_type_id")
+    TransportType transportType;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")

@@ -5,6 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.logisticplatform.model.BaseEntity;
+import ru.logisticplatform.model.order.Goods;
 import ru.logisticplatform.model.order.Transportation;
 
 import javax.persistence.*;
@@ -63,6 +64,9 @@ public class User extends BaseEntity implements UserDetails{
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     UserStatus userStatus;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<Goods> goods;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
