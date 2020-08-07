@@ -59,7 +59,7 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    UserStatus userStatus;
+    UserStatus userStatus = UserStatus.NOT_ACTIVE;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     //@JsonIgnore
