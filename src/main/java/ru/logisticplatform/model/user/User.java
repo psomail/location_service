@@ -1,15 +1,14 @@
 package ru.logisticplatform.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import ru.logisticplatform.model.BaseEntity;
-import ru.logisticplatform.model.order.Goods;
-import ru.logisticplatform.model.order.Transportation;
+import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.order.Order;
+import ru.logisticplatform.model.transportation.Transportation;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,7 +25,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity implements UserDetails{
+public class User extends BaseEntity {
 
     @Column(name = "username")
     String username;
@@ -47,49 +46,43 @@ public class User extends BaseEntity implements UserDetails{
     String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_roles",
+    @JoinTable(name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     List<Role> roles;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "users_usertypes",
+    @JoinTable(name = "user_usertypes",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "usertype_id", referencedColumnName = "id")})
     List<UserType> userTypes;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    List<Transportation> transportation;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     UserStatus userStatus;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    //@JsonIgnore
     List<Goods> goods;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<Order> orders;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    List<Transportation> transportations;
 
     @Override
-    public boolean isAccountNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return false;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return false;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return false;
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                ", userTypes=" + userTypes +
+                ", userStatus=" + userStatus +
+                '}';
     }
 }

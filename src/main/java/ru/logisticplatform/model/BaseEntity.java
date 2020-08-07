@@ -29,14 +29,12 @@ public class BaseEntity {
     Long id;
 
     @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created", nullable = false, updatable = false)
+    @Column(name = "created")
     @CreationTimestamp
     Date created;
 
     @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", nullable = false)
+    @Column(name = "updated")
     @UpdateTimestamp
     Date updated;
 }

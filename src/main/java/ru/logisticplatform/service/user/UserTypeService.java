@@ -1,9 +1,9 @@
-package ru.logisticplatform.service;
+package ru.logisticplatform.service.user;
 
 import ru.logisticplatform.model.user.UserType;
 
 /**
- * Transportation interface for class {@link UserType}.
+ * Service interface for class {@link UserType}.
  *
  * @author Sergei Perminov
  * @version 1.0
@@ -13,5 +13,4 @@ import ru.logisticplatform.model.user.UserType;
 public interface UserTypeService {
 
     UserType findByUserTypeName(String userTypeName);
-
 }

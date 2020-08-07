@@ -1,11 +1,12 @@
-package ru.logisticplatform.service;
+package ru.logisticplatform.service.user;
 
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
+
 import java.util.List;
 
 /**
- * Transportation interface for class {@link User}.
+ * Service interface for class {@link User}.
  *
  * @author Sergei Perminov
  * @version 1.0

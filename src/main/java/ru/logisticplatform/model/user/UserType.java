@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.BaseEntity;
+import ru.logisticplatform.model.user.User;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,9 +1,9 @@
-package ru.logisticplatform.service;
+package ru.logisticplatform.service.user;
 
 import ru.logisticplatform.model.user.Role;
 
 /**
- * Transportation interface for class {@link Role}.
+ * Service interface for class {@link Role}.
  *
  * @author Sergei Perminov
  * @version 1.0

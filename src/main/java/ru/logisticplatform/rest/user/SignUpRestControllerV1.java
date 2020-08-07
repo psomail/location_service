@@ -1,4 +1,4 @@
-package ru.logisticplatform.rest;
+package ru.logisticplatform.rest.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.user.SignUpUserDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.user.User;
-import ru.logisticplatform.service.RoleService;
-import ru.logisticplatform.service.UserService;
-import ru.logisticplatform.service.UserTypeService;
+import ru.logisticplatform.service.user.RoleService;
+import ru.logisticplatform.service.user.UserService;
+import ru.logisticplatform.service.user.UserTypeService;
 
 /**
  * REST controller for {@link User} registrated requests.

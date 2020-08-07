@@ -1,4 +1,4 @@
-package ru.logisticplatform.rest;
+package ru.logisticplatform.rest.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,7 @@ import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.user.UserDto;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
-import ru.logisticplatform.service.UserService;
+import ru.logisticplatform.service.user.UserService;
 
 /**
  * REST controller for {@link User} connected requests.

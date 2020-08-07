@@ -6,4 +6,3 @@ public enum OrderStatus {
     NOT_ACTIVE,
     DELETED
 }
-
