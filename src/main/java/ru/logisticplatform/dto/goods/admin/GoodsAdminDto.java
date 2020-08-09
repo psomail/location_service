@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.logisticplatform.dto.user.admin.AdminUserDto;
 import ru.logisticplatform.model.goods.Goods;
 import ru.logisticplatform.model.goods.GoodsPrivate;
-
-import java.util.Date;
+import ru.logisticplatform.model.goods.GoodsStatus;
 
 /**
  * DTO class for user requests by {@link Goods}
@@ -32,8 +30,6 @@ public class GoodsAdminDto {
     Double volume;
     Double carrying;
     GoodsPrivate goodsPrivate;
-    AdminUserDto user;
-    Date created;
-    Date updated;
-
+    UserForGoodsAdminDto user;
+    GoodsStatus goodsStatus;
 }

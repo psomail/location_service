@@ -6,18 +6,11 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.goods.GoodsType;
 
-
-/**
- * DTO class for user requests by {@link GoodsType}
- *
- * @author Sergei Perminov
- * @version 1.0
- */
+import java.util.Date;
 
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GoodsTypeUserDto {
+public class GoodsTypeForCreateGoodsDto {
     Long id;
-    String name;
 }

@@ -47,9 +47,28 @@ public class Goods extends BaseEntity {
     @JoinColumn(name = "user_id")
     User user;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    GoodsStatus goodsStatus = GoodsStatus.CREATED;
+
     @ManyToMany(mappedBy = "goods", fetch = FetchType.LAZY)
     List<Order> orders;
 
     @ManyToMany(mappedBy = "goods", fetch = FetchType.LAZY)
     List<Transportation> transportations;
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "name='" + name + '\'' +
+                ", goodsType=" + goodsType +
+                ", lenght=" + lenght +
+                ", width=" + width +
+                ", height=" + height +
+                ", volume=" + volume +
+                ", carrying=" + carrying +
+                ", goodsPrivate=" + goodsPrivate +
+                ", user=" + user +
+                '}';
+    }
 }

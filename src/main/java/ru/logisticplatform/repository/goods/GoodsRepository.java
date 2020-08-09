@@ -2,7 +2,10 @@ package ru.logisticplatform.repository.goods;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import ru.logisticplatform.dto.goods.GoodsTypeForCreateGoodsDto;
+import ru.logisticplatform.dto.goods.UserForCreateGoodsDto;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.user.User;
 
 import java.util.List;
@@ -17,4 +20,13 @@ import java.util.List;
 public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
     List<Goods> findAllByUser(User user);
-}
+
+    List<Goods> findAllByNameAndGoodsTypeAndLenghtAndWidthAndHeightAndVolumeAndCarryingAndUser(String name
+                                                                                                ,GoodsType goodsType
+                                                                                                ,Double lenght
+                                                                                                ,Double width
+                                                                                                ,Double height
+                                                                                                ,Double volume
+                                                                                                ,Double carrying
+                                                                                                ,User user);
+ }

@@ -124,7 +124,7 @@
             </column>
 
             <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false" unique="true"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="goodstype_id" type="BIGINT">
@@ -155,6 +155,10 @@
             </column>
 
             <column name="user_id" type="BIGINT">
+            </column>
+
+            <column name="status" type="VARCHAR(25)" defaultValue="CREATED">
+                <constraints nullable="false"/>
             </column>
 
             <column name="updated" type="TIMESTAMP" defaultValue="CURRENT_TIMESTAMP()">

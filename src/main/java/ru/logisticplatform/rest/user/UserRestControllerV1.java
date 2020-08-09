@@ -9,6 +9,7 @@ import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.user.UserDto;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
+import ru.logisticplatform.rest.user.admin.AdminRestControllerV1;
 import ru.logisticplatform.service.user.UserService;
 
 /**
@@ -31,7 +32,7 @@ public class UserRestControllerV1 {
         this.adminRestControllerV1 = adminRestControllerV1;
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> getUser(@PathVariable("id") Long userId){
 
         if(userId == null){
@@ -40,7 +41,7 @@ public class UserRestControllerV1 {
 
         User user = this.userService.findById(userId);
 
-        if (user == null){
+        if (user == null || user.getUserStatus() == UserStatus.DELETED){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         UserDto userDto = ObjectMapperUtils.map(user, UserDto.class);
@@ -48,7 +49,7 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> deleteUser(@PathVariable("id") Long userId) {
 
         if(userId == null){

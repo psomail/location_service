@@ -33,6 +33,13 @@ public class TransportationRestControllerV1 {
         this.transportTypeService = transportTypeService;
     }
 
+
+    /**
+     *
+     * @param transportTypeId
+     * @return
+     */
+
     @GetMapping(value = "/transporttypes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TransportTypeDto> geTransportType(@PathVariable("id") Long transportTypeId){
 

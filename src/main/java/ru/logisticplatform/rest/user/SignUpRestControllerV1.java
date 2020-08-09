@@ -37,7 +37,7 @@ public class SignUpRestControllerV1 {
         this.userTypeService = userTypeService;
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignUpUserDto> saveUser(@RequestBody SignUpUserDto userDto){
         HttpHeaders headers = new HttpHeaders();
 

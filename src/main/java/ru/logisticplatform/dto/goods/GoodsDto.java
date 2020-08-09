@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.logisticplatform.model.goods.GoodsPrivate;
 
 /**
  * DTO class for user requests by {@link Goods}
@@ -18,14 +17,14 @@ import ru.logisticplatform.model.goods.GoodsPrivate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GoodsUserDto {
+public class GoodsDto {
 
-    GoodsTypeUserDto goodsType;
+
     String name;
+    GoodsTypeDto goodsType;
     Double lenght;
     Double width;
     Double height;
     Double volume;
     Double carrying;
-    GoodsPrivate goodsPrivate;
 }

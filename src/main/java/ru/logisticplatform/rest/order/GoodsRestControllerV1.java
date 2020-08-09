@@ -2,21 +2,19 @@ package ru.logisticplatform.rest.order;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import ru.logisticplatform.dto.goods.GoodsTypeUserDto;
-import ru.logisticplatform.dto.goods.GoodsUserDto;
+import org.springframework.web.bind.annotation.*;
+import ru.logisticplatform.dto.goods.CreateGoodsDto;
 import ru.logisticplatform.dto.goods.GoodsTypeDto;
-import ru.logisticplatform.dto.goods.admin.GoodsTypeAdminDto;
+import ru.logisticplatform.dto.goods.GoodsDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.goods.Goods;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.order.Order;
+import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.service.goods.GoodsService;
 import ru.logisticplatform.service.goods.GoodsTypeService;
 
@@ -43,7 +41,7 @@ public class GoodsRestControllerV1 {
     }
 
     @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GoodsUserDto> getGoods(@PathVariable("id") Long goodsId){
+    public ResponseEntity<GoodsDto> getGoods(@PathVariable("id") Long goodsId){
 
         if(goodsId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -55,14 +53,18 @@ public class GoodsRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        GoodsUserDto goodsUserDto = ObjectMapperUtils.map(goods, GoodsUserDto.class);
+        GoodsDto goodsUserDto = ObjectMapperUtils.map(goods, GoodsDto.class);
 
         return new ResponseEntity<>(goodsUserDto, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @return
+     */
 
     @GetMapping(value = "/goodstypes/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GoodsTypeUserDto>> getAllGoodsType(){
+    public ResponseEntity<List<GoodsTypeDto>> getAllGoodsType(){
 
         List<GoodsType> goodsTypes = this.goodsTypeService.findAll();
 
@@ -70,14 +72,19 @@ public class GoodsRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<GoodsTypeUserDto> goodsTypeUserDtos = ObjectMapperUtils.mapAll(goodsTypes, GoodsTypeUserDto.class);
+        List<GoodsTypeDto> goodsTypeUserDtos = ObjectMapperUtils.mapAll(goodsTypes, GoodsTypeDto.class);
 
         return new ResponseEntity<>(goodsTypeUserDtos, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param goodsTypeId
+     * @return
+     */
 
     @GetMapping(value = "/goodstypes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GoodsTypeUserDto> getGoodsType(@PathVariable("id") Long goodsTypeId){
+    public ResponseEntity<GoodsTypeDto> getGoodsType(@PathVariable("id") Long goodsTypeId){
 
         if(goodsTypeId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -89,8 +96,45 @@ public class GoodsRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        GoodsTypeUserDto goodsTypeUserDto = ObjectMapperUtils.map(goodsType, GoodsTypeUserDto.class);
+        GoodsTypeDto goodsTypeUserDto = ObjectMapperUtils.map(goodsType, GoodsTypeDto.class);
 
         return new ResponseEntity<>(goodsTypeUserDto, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/create/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreateGoodsDto> createGoods(@RequestBody CreateGoodsDto goodsDto){
+        HttpHeaders headers = new HttpHeaders();
+
+        if(goodsDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(this.goodsService.findByGoodsDto(goodsDto) != null){
+            return new ResponseEntity<>(HttpStatus.FOUND);
+        }
+
+        Goods goods = ObjectMapperUtils.map(goodsDto, Goods.class);
+
+        this.goodsService.createGoods(goods);
+
+        return new ResponseEntity<>(goodsDto, headers, HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/test/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CreateGoodsDto> getGoodsTest(@PathVariable("id") Long goodsId){
+
+        if(goodsId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Goods goods = this.goodsService.findById(goodsId);
+
+        if(goods == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        CreateGoodsDto goodsUserDto = ObjectMapperUtils.map(goods, CreateGoodsDto.class);
+
+        return new ResponseEntity<>(goodsUserDto, HttpStatus.OK);
     }
 }
