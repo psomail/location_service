@@ -12,6 +12,7 @@ import ru.logisticplatform.dto.goods.GoodsTypeDto;
 import ru.logisticplatform.dto.goods.GoodsDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsStatus;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.order.Order;
 import ru.logisticplatform.model.user.User;
@@ -49,7 +50,7 @@ public class GoodsRestControllerV1 {
 
         Goods goods = this.goodsService.findById(goodsId);
 
-        if(goods == null){
+        if(goods == null || goods.getGoodsStatus() == GoodsStatus.DELETED){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -101,6 +102,13 @@ public class GoodsRestControllerV1 {
         return new ResponseEntity<>(goodsTypeUserDto, HttpStatus.OK);
     }
 
+
+    /**
+     *
+     * @param goodsDto
+     * @return
+     */
+
     @PostMapping(value = "/create/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateGoodsDto> createGoods(@RequestBody CreateGoodsDto goodsDto){
         HttpHeaders headers = new HttpHeaders();
@@ -119,6 +127,35 @@ public class GoodsRestControllerV1 {
 
         return new ResponseEntity<>(goodsDto, headers, HttpStatus.CREATED);
     }
+
+    /**
+     *
+     */
+
+    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Goods> deleteGoods(@PathVariable("id") Long goodsId){
+
+        if(goodsId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Goods goods = this.goodsService.findById(goodsId);
+
+        if (goods == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        this.goodsService.updateGoodsStatus(goods, GoodsStatus.DELETED);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    /**
+     *
+     * @param goodsId
+     * @return
+     */
 
     @GetMapping(value = "/test/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CreateGoodsDto> getGoodsTest(@PathVariable("id") Long goodsId){

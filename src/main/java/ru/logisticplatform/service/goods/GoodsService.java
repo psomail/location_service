@@ -2,6 +2,7 @@ package ru.logisticplatform.service.goods;
 
 import ru.logisticplatform.dto.goods.CreateGoodsDto;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsStatus;
 import ru.logisticplatform.model.user.User;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface GoodsService {
     List<Goods> findAll();
 
     Goods createGoods(Goods goods);
+
+    Goods updateGoodsStatus(Goods goods, GoodsStatus goodsStatus);
 }

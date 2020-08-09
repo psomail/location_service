@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
         User updatedUser = userRepository.save(user);
 
-        log.info("IN UserServiceImpl setUserStatusToDeleted - user: {} successfully set userStatus: {}", updatedUser, userStatus);
+        log.info("IN UserServiceImpl updateUserStatus - user: {} successfully set userStatus: {}", updatedUser, userStatus);
 
         return updatedUser;
     }

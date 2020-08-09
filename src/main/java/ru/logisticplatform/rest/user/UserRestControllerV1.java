@@ -49,6 +49,13 @@ public class UserRestControllerV1 {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
+
+    /**
+     *
+     * @param userId
+     * @return
+     */
+
     @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> deleteUser(@PathVariable("id") Long userId) {
 

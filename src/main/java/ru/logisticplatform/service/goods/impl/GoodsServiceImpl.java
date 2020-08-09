@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.logisticplatform.dto.goods.CreateGoodsDto;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsStatus;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.repository.goods.GoodsRepository;
@@ -130,5 +131,24 @@ public class GoodsServiceImpl implements GoodsService {
         log.info("IN GoodsServiceImpl createGoods - goods: {} successfully registered", createdGoods);
 
         return createdGoods;
+    }
+
+    /**
+     *
+     * @param goods
+     * @param goodsStatus
+     * @return
+     */
+
+    @Override
+    public Goods updateGoodsStatus(Goods goods, GoodsStatus goodsStatus) {
+
+        goods.setGoodsStatus(goodsStatus);
+
+        Goods updateGoods = goodsRepository.save(goods);
+
+        log.info("IN GoodsServiceImpl updateGoodsStatus - goods: {} successfully set goodsStatus: {}", updateGoods, goodsStatus);
+
+        return updateGoods;
     }
 }
