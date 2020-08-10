@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoodsDto {
 
-
+    Long id;
     String name;
     GoodsTypeDto goodsType;
     Double lenght;

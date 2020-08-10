@@ -133,22 +133,29 @@ public class GoodsServiceImpl implements GoodsService {
         return createdGoods;
     }
 
+
     /**
      *
      * @param goods
-     * @param goodsStatus
      * @return
      */
 
-    @Override
-    public Goods updateGoodsStatus(Goods goods, GoodsStatus goodsStatus) {
 
-        goods.setGoodsStatus(goodsStatus);
+    @Override
+    public Goods updateGoods(Goods goods) {
 
         Goods updateGoods = goodsRepository.save(goods);
 
-        log.info("IN GoodsServiceImpl updateGoodsStatus - goods: {} successfully set goodsStatus: {}", updateGoods, goodsStatus);
+        log.info("IN GoodsServiceImpl updateGoods - goods: {} successfully updated", updateGoods);
 
         return updateGoods;
+    }
+
+    @Override
+    public void delete(Long id) {
+
+        log.info("IN GoodsServiceImpl delete {}", id);
+
+        goodsRepository.deleteById(id);
     }
 }

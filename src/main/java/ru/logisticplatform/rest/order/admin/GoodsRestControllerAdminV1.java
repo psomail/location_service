@@ -5,15 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.goods.admin.GoodsAdminDto;
 import ru.logisticplatform.dto.goods.admin.GoodsTypeAdminAllGoodsDto;
 import ru.logisticplatform.dto.goods.admin.GoodsTypeAdminDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsStatus;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.order.Order;
 import ru.logisticplatform.model.user.User;
@@ -185,5 +183,29 @@ public class GoodsRestControllerAdminV1 {
         GoodsTypeAdminAllGoodsDto goodsTypAdminDto = ObjectMapperUtils.map(goodsType, GoodsTypeAdminAllGoodsDto.class);
 
         return new ResponseEntity<>(goodsTypAdminDto, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param goodsId
+     * @return
+     */
+
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Goods> deleteGoods(@PathVariable("id") Long goodsId){
+
+        if(goodsId == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Goods goods = this.goodsService.findById(goodsId);
+
+        if (goods == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        this.goodsService.delete(goodsId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

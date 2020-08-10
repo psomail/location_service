@@ -130,9 +130,43 @@ public class GoodsRestControllerV1 {
 
     /**
      *
+     * @param goodsDto
+     * @return
      */
 
-    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GoodsDto> updateGoods(@RequestBody GoodsDto goodsDto){
+        HttpHeaders headers = new HttpHeaders();
+
+        if(goodsDto == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Goods goods = this.goodsService.findById(goodsDto.getId());
+
+        if (goods == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Goods updateGoods = ObjectMapperUtils.map(goodsDto, Goods.class);
+        updateGoods.setGoodsPrivate(goods.getGoodsPrivate());
+        updateGoods.setUser(goods.getUser());
+        updateGoods.setGoodsStatus(goods.getGoodsStatus());
+        updateGoods.setUpdated(goods.getUpdated());
+        updateGoods.setCreated(goods.getCreated());
+
+        this.goodsService.updateGoods(updateGoods);
+
+        return new ResponseEntity<>(goodsDto, headers, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param goodsId
+     * @return
+     */
+
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Goods> deleteGoods(@PathVariable("id") Long goodsId){
 
         if(goodsId == null){
@@ -145,7 +179,9 @@ public class GoodsRestControllerV1 {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        this.goodsService.updateGoodsStatus(goods, GoodsStatus.DELETED);
+        goods.setGoodsStatus(GoodsStatus.DELETED);
+
+        this.goodsService.updateGoods(goods);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
