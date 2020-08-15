@@ -31,16 +31,28 @@ public class Transportation extends BaseEntity {
     @Column(name = "model")
     String model;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    TransportationStatus transportationStatus = TransportationStatus.CREATED;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "transportations_goods",
             joinColumns = {@JoinColumn(name = "transportations_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "goods_id", referencedColumnName = "id")})
     List<Goods> goods;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    TransportationStatus transportationStatus = TransportationStatus.CREATED;
-
     @OneToMany(mappedBy = "transportation", fetch = FetchType.LAZY)
     List<Deal> deals;
+
+    @Override
+    public String toString() {
+        return "Transportation{" +
+           //     "user=" + user +
+          //      ", transportType=" + transportType +
+                ", model='" + model + '\'' +
+                ", transportationStatus=" + transportationStatus +
+          //      ", goods=" + goods +
+          //      ", deals=" + deals +
+                '}';
+    }
 }

@@ -201,6 +201,9 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
+            <column name="user_id" type="BIGINT">
+            </column>
+
             <column name="transport_type_id" type="BIGINT">
             </column>
 
