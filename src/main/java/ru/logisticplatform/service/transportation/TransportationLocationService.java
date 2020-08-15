@@ -5,5 +5,4 @@ import ru.logisticplatform.model.transportation.TransportationLocation;
 
 public interface TransportationLocationService {
 
-    TransportationLocation findByTransportation
 }
