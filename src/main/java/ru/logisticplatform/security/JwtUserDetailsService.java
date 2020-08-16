@@ -15,10 +15,11 @@ import ru.logisticplatform.service.user.UserService;
 @Service
 @Slf4j
 public class JwtUserDetailsService implements UserDetailsService {
+
     private final UserService userService;
 
     @Autowired
-    public JwtUserDetailsService(UserService userService){
+    public JwtUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
@@ -26,13 +27,12 @@ public class JwtUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
 
-        if(user == null){
-            throw new UsernameNotFoundException("User with username: " + username + " notfound");
+        if (user == null) {
+            throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
 
         JwtUser jwtUser = JwtUserFactory.create(user);
         log.info("IN loadUserByUsername - user with username: {} successfully loaded", username);
-
         return jwtUser;
     }
 }

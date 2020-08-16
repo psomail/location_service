@@ -32,8 +32,8 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v1/")
-public class SignUpRestControllerV1 {
+@RequestMapping("/api/v1/sign/")
+public class SignRestControllerV1 {
 
     private final UserService userService;
     private final RoleService roleService;
@@ -43,8 +43,8 @@ public class SignUpRestControllerV1 {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public SignUpRestControllerV1(UserService userService, RoleService roleService, UserTypeService userTypeService,
-                                  AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public SignRestControllerV1(UserService userService, RoleService roleService, UserTypeService userTypeService,
+                                AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
 
         this.userService = userService;
         this.roleService = roleService;
@@ -53,7 +53,7 @@ public class SignUpRestControllerV1 {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
-    @PostMapping(value = "/signup/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "up", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<SignUpUserDto> saveUser(@RequestBody SignUpUserDto userDto){
         HttpHeaders headers = new HttpHeaders();
 
@@ -73,11 +73,17 @@ public class SignUpRestControllerV1 {
         return new ResponseEntity<>(userDto, headers, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/signin/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "in", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+
+            String password = requestDto.getPassword();
+
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
+                            = new UsernamePasswordAuthenticationToken(username, password);
+
+            authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             User user = userService.findByUsername(username);
 
             if (user == null) {
