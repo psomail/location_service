@@ -20,14 +20,14 @@ import ru.logisticplatform.service.user.UserService;
  */
 
 @RestController
-@RequestMapping("/api/v1/users/")
-public class UserRestControllerV1 {
+@RequestMapping("/api/v1/customers/")
+public class CustomerRestControllerV1 {
 
     private final UserService userService;
     private final AdminRestControllerV1 adminRestControllerV1;
 
     @Autowired
-    public UserRestControllerV1(UserService userService, AdminRestControllerV1 adminRestControllerV1) {
+    public CustomerRestControllerV1(UserService userService, AdminRestControllerV1 adminRestControllerV1) {
         this.userService = userService;
         this.adminRestControllerV1 = adminRestControllerV1;
     }

@@ -24,6 +24,6 @@ public class UserDto {
     String lastName;
     String email;
     String phone;
-    List<RoleDto> roles;
-    List<UserTypeDto> userTypes;
+//    List<RoleDto> roles;
+//    List<UserTypeDto> userTypes;
 }
