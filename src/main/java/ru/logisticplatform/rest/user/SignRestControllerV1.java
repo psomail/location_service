@@ -18,8 +18,6 @@ import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.security.jwt.JwtTokenProvider;
 import ru.logisticplatform.service.user.RoleService;
 import ru.logisticplatform.service.user.UserService;
-import ru.logisticplatform.service.user.UserTypeService;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,18 +35,16 @@ public class SignRestControllerV1 {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final UserTypeService userTypeService;
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
-    public SignRestControllerV1(UserService userService, RoleService roleService, UserTypeService userTypeService,
-                                AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public SignRestControllerV1(UserService userService, RoleService roleService, AuthenticationManager authenticationManager,
+                                JwtTokenProvider jwtTokenProvider) {
 
         this.userService = userService;
         this.roleService = roleService;
-        this.userTypeService = userTypeService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -66,7 +62,6 @@ public class SignRestControllerV1 {
         }
 
         userDto.getRoles().forEach(role -> role.setId(roleService.findByRoleName(role.getName()).getId()));
-        userDto.getUserTypes().forEach(userType -> userType.setId(userTypeService.findByUserTypeName(userType.getName()).getId()));
 
         this.userService.signUp(ObjectMapperUtils.map(userDto, User.class));
 

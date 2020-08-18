@@ -18,7 +18,6 @@ import ru.logisticplatform.model.goods.Goods;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateGoodsDto {
-
     String name;
     GoodsTypeForCreateGoodsDto goodsType;
     Double lenght;

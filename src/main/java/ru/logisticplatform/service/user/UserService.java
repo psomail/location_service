@@ -1,5 +1,6 @@
 package ru.logisticplatform.service.user;
 
+import ru.logisticplatform.model.user.Role;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 
@@ -27,6 +28,5 @@ public interface UserService{
     void delete(Long id);
 
     List<User> findByStatus(UserStatus userStatus);
-
 }
 

@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,12 +19,9 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
-    Long id;
     String username;
     String firstName;
     String lastName;
     String email;
     String phone;
-//    List<RoleDto> roles;
-//    List<UserTypeDto> userTypes;
 }

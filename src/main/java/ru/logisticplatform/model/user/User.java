@@ -51,12 +51,6 @@ public class User extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     List<Role> roles;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_usertypes",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "usertype_id", referencedColumnName = "id")})
-    List<UserType> userTypes;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     UserStatus userStatus = UserStatus.NOT_ACTIVE;
@@ -81,7 +75,6 @@ public class User extends BaseEntity {
                 ", phone='" + phone + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
-                ", userTypes=" + userTypes +
                 ", userStatus=" + userStatus +
                 '}';
     }

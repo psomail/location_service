@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.logisticplatform.model.user.Role;
+import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.repository.user.RoleRepository;
 import ru.logisticplatform.service.user.RoleService;
 
@@ -31,5 +32,10 @@ public class RoleServiceImpl implements RoleService {
         Role role = roleRepository.findByName(roleName);
         log.info("IN RoleServiceImpl findByRoleName - role: {} found by roleName: {}", role, roleName);
         return role;
+    }
+
+    @Override
+    public Boolean findUserRole(User user, String roleName) {
+        return user.getRoles().stream().anyMatch(s->s.getName().contains(roleName));
     }
 }

@@ -46,7 +46,7 @@ public class AdminRestControllerV1 {
      */
 
     @GetMapping(value = "/users/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<AdminUserDto>> getAllUser(){
+    public ResponseEntity<List<AdminUserDto>> getAllUsers(){
         List<User>  users = this.userService.getAll();
 
         if(users.isEmpty()){

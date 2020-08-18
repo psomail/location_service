@@ -20,7 +20,6 @@ import ru.logisticplatform.model.goods.GoodsStatus;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoodsAdminDto {
-
     Long id;
     GoodsTypeAdminDto goodsType;
     String name;

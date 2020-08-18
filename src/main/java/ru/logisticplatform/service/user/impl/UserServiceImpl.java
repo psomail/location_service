@@ -8,6 +8,9 @@ import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.repository.user.UserRepository;
 import ru.logisticplatform.service.user.UserService;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -90,4 +93,5 @@ public class UserServiceImpl implements UserService {
     public List<User> findByStatus(UserStatus userStatus) {
         return userRepository.findByUserStatus(userStatus);
     }
+
 }

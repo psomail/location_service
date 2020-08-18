@@ -1,6 +1,7 @@
 package ru.logisticplatform.service.user;
 
 import ru.logisticplatform.model.user.Role;
+import ru.logisticplatform.model.user.User;
 
 /**
  * Service interface for class {@link Role}.
@@ -13,4 +14,6 @@ import ru.logisticplatform.model.user.Role;
 public interface RoleService {
 
     Role findByRoleName(String roleName);
+
+    Boolean findUserRole(User user, String roleName);
 }

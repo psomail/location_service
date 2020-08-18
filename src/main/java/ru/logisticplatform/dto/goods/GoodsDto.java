@@ -18,7 +18,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoodsDto {
-
     Long id;
     String name;
     GoodsTypeDto goodsType;

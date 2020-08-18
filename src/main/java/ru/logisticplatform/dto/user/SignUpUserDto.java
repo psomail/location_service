@@ -26,5 +26,4 @@ public class SignUpUserDto {
     String password;
     UserStatus userStatus;
     List<RoleDto> roles;
-    List<UserTypeDto> userTypes;
 }

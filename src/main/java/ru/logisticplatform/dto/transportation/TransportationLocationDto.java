@@ -12,7 +12,6 @@ import java.util.Date;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransportationLocationDto {
-
     long id;
     TransportationDto transportation;
     Double lat;
