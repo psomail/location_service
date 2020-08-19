@@ -37,6 +37,7 @@ public class TransportTypeServiceImpl implements TransportTypeService {
 
     @Override
     public List<TransportType> getAll() {
-        return null;
+        log.info("IN TransportTypeServiceImpl getAll");
+        return transportTypeRepository.findAll();
     }
 }

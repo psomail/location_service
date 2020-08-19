@@ -36,31 +36,6 @@ public class TransportationRestControllerV1 {
         this.transportTypeService = transportTypeService;
     }
 
-
-    /**
-     *
-     * @param transportTypeId
-     * @return
-     */
-
-    @GetMapping(value = "/transporttypes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<TransportTypeDto> geTransportType(@PathVariable("id") Long transportTypeId){
-
-        if(transportTypeId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        TransportType transportType = this.transportTypeService.findById(transportTypeId);
-
-        if (transportType == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        TransportTypeDto transportTypeDto = ObjectMapperUtils.map(transportType, TransportTypeDto.class);
-
-        return new ResponseEntity<>(transportTypeDto, HttpStatus.OK);
-    }
-
     /**
      * 
      * @param transportationId

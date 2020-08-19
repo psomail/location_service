@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransportTypeDto {
+    Long id;
     String name;
     String description;
     Double lenght;

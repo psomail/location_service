@@ -89,23 +89,20 @@ public class CustomerRestControllerV1 {
         return new ResponseEntity<>(userDto, HttpStatus.OK);
     }
 
-
     /**
      *
-     * @param userId
+     * @param authentication
      * @return
      */
 
-    @DeleteMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteUser(@PathVariable("id") Long userId) {
+    @DeleteMapping(value = "me", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> deleteMe(Authentication authentication/*, Principal principal*/) {
 
-        if(userId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+        //System.out.println(principal.getName());
 
-        User user = this.userService.findById(userId);
+        User user = this.userService.findByUsername(authentication.getName());
 
-        if (user == null) {
+        if (user == null || user.getUserStatus() == UserStatus.DELETED) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
