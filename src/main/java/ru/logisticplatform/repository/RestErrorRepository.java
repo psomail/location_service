@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.logisticplatform.model.RestError;
 
 public interface RestErrorRepository extends JpaRepository<RestError, Long> {
+
+    RestError findByCode(String string);
 }

@@ -29,7 +29,7 @@ public class ContractorRestControllerV1 {
 
     private final UserService userService;
     private final RoleService roleService;
-     private final RestErrorService restErrorService;
+    private final RestErrorService restErrorService;
 
     @Autowired
     public ContractorRestControllerV1(UserService userService
@@ -54,7 +54,7 @@ public class ContractorRestControllerV1 {
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED){
 
-            RestError restError = this.restErrorService.findById(2L);
+            RestError restError = this.restErrorService.findByCode("U002");
 
             RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
 
@@ -85,11 +85,11 @@ public class ContractorRestControllerV1 {
                 || this.roleService.findUserRole(user, "ROLE_CONTRACTOR")
                 || this.roleService.findUserRole(user, "ROLE_ADMIN")){
 
-            RestError restError = this.restErrorService.findById(1L);
+            RestError restError = this.restErrorService.findByCode("U001");
 
             RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto , HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
         }
 
         UserDto userDto = ObjectMapperUtils.map(user, UserDto.class);
@@ -112,7 +112,7 @@ public class ContractorRestControllerV1 {
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED) {
 
-            RestError restError = this.restErrorService.findById(2L);
+            RestError restError = this.restErrorService.findByCode("U002");
 
             RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
 

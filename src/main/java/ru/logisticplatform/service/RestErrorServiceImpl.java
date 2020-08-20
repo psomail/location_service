@@ -31,4 +31,16 @@ public class RestErrorServiceImpl implements RestErrorService {
 
         return restError;
     }
+
+    @Override
+    public RestError findByCode(String code) {
+        RestError restError = this.restErrorRepository.findByCode(code);
+
+        if (restError == null){
+            log.warn("IN RestErrorServiceImpl findByCode - no restError found by code: {}", code);
+            return null;
+        }
+
+        return restError;
+    }
 }

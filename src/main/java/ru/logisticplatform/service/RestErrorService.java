@@ -5,4 +5,6 @@ import ru.logisticplatform.model.RestError;
 public interface RestErrorService {
 
     RestError findById(Long id);
+
+    RestError findByCode(String code);
 }

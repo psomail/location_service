@@ -34,19 +34,28 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
+
     @Override
     public User signUp(User user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User signUpUser = userRepository.save(user);
 
-        log.info("IN UserServiceImpl signUp - user: {} successfully registered", signUpUser);
+        log.info("IN UserServiceImpl signUp - user: {} successfully registered", signUpUser.getUsername());
 
         return signUpUser;
     }
 
     @Override
     public List<User> getAll() {
+
+        List<User> users = userRepository.findAll();
+
         log.info("IN UserServiceImpl getAll");
         return userRepository.findAll();
     }
@@ -60,15 +69,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        User result = userRepository.findById(id).orElse(null);
+        User user = userRepository.findById(id).orElse(null);
 
-        if (result == null){
+        if (user == null){
             log.warn("IN UserServiceImpl findById - no user found by id: {}", id);
             return null;
         }
 
-        log.info("IN UserServiceImpl findById - user: {} found by id: {}", result, id);
-        return result;
+        log.info("IN UserServiceImpl findById - user: {} found by id: {}", user.getUsername(), id);
+        return user;
     }
 
     @Override

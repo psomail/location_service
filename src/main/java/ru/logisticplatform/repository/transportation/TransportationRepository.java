@@ -3,6 +3,7 @@ package ru.logisticplatform.repository.transportation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.logisticplatform.model.transportation.Transportation;
+import ru.logisticplatform.model.transportation.TransportationStatus;
 import ru.logisticplatform.model.user.User;
 
 import java.util.List;
@@ -16,5 +17,10 @@ import java.util.List;
 
 public interface TransportationRepository extends JpaRepository<Transportation, Long> {
 
-    //   List<Transportation> findByUser(User user);
+    List<Transportation> findAllByUser(User user);
+
+    List<Transportation> findAllByUserAndTransportationStatus(User user, TransportationStatus transportationStatus);
+
+    List<Transportation> findAllByUserAndTransportationStatusNotLike(User user, TransportationStatus transportationStatusNotLike);
+
 }

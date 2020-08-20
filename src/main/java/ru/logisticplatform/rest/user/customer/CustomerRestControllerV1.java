@@ -6,17 +6,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.logisticplatform.dto.RestErrorDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.dto.user.UserDto;
-import ru.logisticplatform.model.user.Role;
+import ru.logisticplatform.model.RestError;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
-import ru.logisticplatform.rest.user.admin.AdminRestControllerV1;
+import ru.logisticplatform.service.RestErrorService;
 import ru.logisticplatform.service.user.RoleService;
 import ru.logisticplatform.service.user.UserService;
 
-import java.security.Principal;
-import java.util.List;
 
 /**
  * REST controller for {@link User} connected requests.
@@ -31,15 +30,15 @@ public class CustomerRestControllerV1 {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final AdminRestControllerV1 adminRestControllerV1;
+    private final RestErrorService restErrorService;
 
     @Autowired
     public CustomerRestControllerV1(     UserService userService
                                         ,RoleService roleService
-                                        ,AdminRestControllerV1 adminRestControllerV1) {
+                                        ,RestErrorService restErrorService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.adminRestControllerV1 = adminRestControllerV1;
+        this.restErrorService = restErrorService;
     }
 
     /**
@@ -49,18 +48,23 @@ public class CustomerRestControllerV1 {
      */
 
     @GetMapping(value = "me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> getMe(Authentication authentication/*, Principal principal*/) {
+    public ResponseEntity<?> getMe(Authentication authentication/*, Principal principal*/) {
         //System.out.println(principal.getName());
 
         User user = this.userService.findByUsername(authentication.getName());
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            RestError restError = this.restErrorService.findById(2L);
+
+            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+
+            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
         }
 
         UserDto userDto = ObjectMapperUtils.map(user, UserDto.class);
 
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }
 
     /**
@@ -70,7 +74,7 @@ public class CustomerRestControllerV1 {
      */
 
     @GetMapping(value = "/contractors/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> getContractor(@PathVariable("name") String userName){
+    public ResponseEntity<?> getContractor(@PathVariable("name") String userName){
 
         if(userName == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -81,12 +85,17 @@ public class CustomerRestControllerV1 {
         if (user == null || user.getUserStatus() != UserStatus.ACTIVE
                 || this.roleService.findUserRole(user, "ROLE_CUSTOMER")
                 || this.roleService.findUserRole(user, "ROLE_ADMIN")){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            RestError restError = this.restErrorService.findByCode("U003");
+
+            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+
+            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
         }
 
         UserDto userDto = ObjectMapperUtils.map(user, UserDto.class);
 
-        return new ResponseEntity<>(userDto, HttpStatus.OK);
+        return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
     }
 
     /**
@@ -96,14 +105,19 @@ public class CustomerRestControllerV1 {
      */
 
     @DeleteMapping(value = "me", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteMe(Authentication authentication/*, Principal principal*/) {
+    public ResponseEntity<?> deleteMe(Authentication authentication/*, Principal principal*/) {
 
         //System.out.println(principal.getName());
 
         User user = this.userService.findByUsername(authentication.getName());
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            RestError restError = this.restErrorService.findByCode("U002");
+
+            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+
+            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
         }
 
         this.userService.updateUserStatus(user, UserStatus.DELETED);

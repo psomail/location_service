@@ -550,13 +550,29 @@
             <column name="description" value="The customer is not found"/>
         </insert>
 
-    </changeSet>
-
-    <changeSet id="1.0.25" author="serg.perm">
-
         <insert tableName="rest_errors">
             <column name="code" value="U002"/>
             <column name="description" value="The user is not found"/>
+        </insert>
+
+        <insert tableName="rest_errors">
+            <column name="code" value="U003"/>
+            <column name="description" value="The contractor is not found"/>
+        </insert>
+
+        <insert tableName="rest_errors">
+            <column name="code" value="T001"/>
+            <column name="description" value="The transport type is not found"/>
+        </insert>
+
+        <insert tableName="rest_errors">
+            <column name="code" value="T002"/>
+            <column name="description" value="The transportation is not found"/>
+        </insert>
+
+        <insert tableName="rest_errors">
+            <column name="code" value="S001"/>
+            <column name="description" value="The request is not supported"/>
         </insert>
 
     </changeSet>
