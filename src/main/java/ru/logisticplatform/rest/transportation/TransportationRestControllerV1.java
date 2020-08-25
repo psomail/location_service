@@ -8,7 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.RestErrorDto;
 import ru.logisticplatform.dto.transportation.TransportTypeDto;
+import ru.logisticplatform.dto.transportation.TransportationCreateDto;
 import ru.logisticplatform.dto.transportation.TransportationDto;
+import ru.logisticplatform.dto.user.SignUpUserDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestError;
 import ru.logisticplatform.model.goods.Goods;
@@ -90,6 +92,11 @@ public class TransportationRestControllerV1 {
         return new ResponseEntity<TransportationDto>(transportationDto, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param authentication
+     * @return
+     */
 
     @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getTransportaionsByUser(Authentication authentication){
@@ -122,6 +129,26 @@ public class TransportationRestControllerV1 {
     }
 
 
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createTransportaion(@RequestBody TransportationCreateDto transportationCreate){
+
+        if (transportationCreate == null) {
+
+            RestError restError = this.restErrorService.findByCode("T003");
+            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+        }
+
+//        if(this.transportationService.findByTransportation(transportationCreate) != null) {
+//
+//            RestError restError = this.restErrorService.findByCode("T004");
+//            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+//            return new ResponseEntity<RestErrorDto>(HttpStatus.FOUND);
+//        }
+
+
+        return null;
+    }
 
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

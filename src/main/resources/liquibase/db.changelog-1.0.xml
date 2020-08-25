@@ -33,6 +33,10 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="activation_code" type="VARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+
             <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
@@ -573,6 +577,15 @@
         <insert tableName="rest_errors">
             <column name="code" value="S001"/>
             <column name="description" value="The request is not supported"/>
+        </insert>
+
+        <insert tableName="rest_errors">
+            <column name="code" value="T003"/>
+            <column name="description" value="The transportation missing to create"/>
+        </insert>
+        <insert tableName="rest_errors">
+            <column name="code" value="T004"/>
+            <column name="description" value="The transportation is already present"/>
         </insert>
 
     </changeSet>
