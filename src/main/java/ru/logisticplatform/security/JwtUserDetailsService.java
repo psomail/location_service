@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.logisticplatform.model.user.User;
+import ru.logisticplatform.mq.ProducerRabbitMq;
 import ru.logisticplatform.security.jwt.JwtUser;
 import ru.logisticplatform.security.jwt.JwtUserFactory;
 import ru.logisticplatform.service.user.UserService;
@@ -17,10 +18,13 @@ import ru.logisticplatform.service.user.UserService;
 public class JwtUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
+    private final ProducerRabbitMq producerRabbitMq;
 
     @Autowired
-    public JwtUserDetailsService(UserService userService) {
+    public JwtUserDetailsService(UserService userService
+                                ,ProducerRabbitMq producerRabbitMq) {
         this.userService = userService;
+        this.producerRabbitMq = producerRabbitMq;
     }
 
     @Override
@@ -28,6 +32,8 @@ public class JwtUserDetailsService implements UserDetailsService {
         User user = userService.findByUsername(username);
 
         if (user == null) {
+            producerRabbitMq.unknownUserProduce(username);
+
             throw new UsernameNotFoundException("User with username: " + username + " not found");
         }
 
@@ -35,4 +41,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         log.info("IN loadUserByUsername - user with username: {} successfully loaded", username);
         return jwtUser;
     }
+
+
 }

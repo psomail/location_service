@@ -3,6 +3,7 @@ package ru.logisticplatform.service.user;
 import ru.logisticplatform.model.user.Role;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
+import ru.logisticplatform.mq.UserMq;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ public interface UserService{
 
     User signUp(User user);
 
+    User updateUser(UserMq userMq);
+
     List<User> getAll();
 
     User findByUsername(String username);
@@ -26,6 +29,8 @@ public interface UserService{
     User updateUserStatus(User user, UserStatus userStatus);
 
     void delete(Long id);
+    void delete(String userName);
+    void delete(User user);
 
     List<User> findByStatus(UserStatus userStatus);
 }

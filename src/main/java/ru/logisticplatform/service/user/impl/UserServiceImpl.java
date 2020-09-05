@@ -4,8 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.model.user.User;
+import ru.logisticplatform.mq.UserMq;
 import ru.logisticplatform.repository.user.UserRepository;
 import ru.logisticplatform.service.user.UserService;
 
@@ -43,12 +45,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public User signUp(User user) {
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User signUpUser = userRepository.save(user);
 
         log.info("IN UserServiceImpl signUp - user: {} successfully registered", signUpUser.getUsername());
 
         return signUpUser;
+    }
+
+    @Override
+    public User updateUser(UserMq userMq) {
+
+        User updateUser = this.userRepository.findByUsername(userMq.getUsername());
+        updateUser.setFirstName(userMq.getFirstName());
+        updateUser.setLastName(userMq.getLastName());
+        updateUser.setEmail(userMq.getEmail());
+        updateUser.setPhone(userMq.getPhone());
+
+        User updatedUser = userRepository.save(updateUser);
+
+        log.info("IN UserServiceImpl updateUser - user: {} successfully updated", updatedUser.getUsername());
+
+        return updatedUser;
     }
 
     @Override
@@ -96,6 +113,20 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         log.info("IN UserServiceImpl delete {}", id);
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public void delete(String userName) {
+
+        User userDelete = userRepository.findByUsername(userName);
+        userRepository.delete(userDelete);
+        log.info("IN UserServiceImpl delete {}", userName);
+    }
+
+    @Override
+    public void delete(User user) {
+        log.info("IN UserServiceImpl delete {}", user.getUsername());
+        userRepository.delete(user);
     }
 
     @Override

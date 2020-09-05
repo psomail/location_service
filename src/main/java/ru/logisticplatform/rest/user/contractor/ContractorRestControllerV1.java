@@ -6,13 +6,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.logisticplatform.dto.RestErrorDto;
+import ru.logisticplatform.dto.RestMessageDto;
 import ru.logisticplatform.dto.user.UserDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
-import ru.logisticplatform.model.RestError;
+import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.model.user.UserStatus;
-import ru.logisticplatform.service.RestErrorService;
+import ru.logisticplatform.service.RestMessageService;
 import ru.logisticplatform.service.user.RoleService;
 import ru.logisticplatform.service.user.UserService;
 
@@ -29,15 +29,15 @@ public class ContractorRestControllerV1 {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final RestErrorService restErrorService;
+    private final RestMessageService restMessageService;
 
     @Autowired
     public ContractorRestControllerV1(UserService userService
-                                        ,RoleService roleService
-                                        ,RestErrorService restErrorService) {
+                                        , RoleService roleService
+                                        , RestMessageService restMessageService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.restErrorService = restErrorService;
+        this.restMessageService = restMessageService;
     }
 
     /**
@@ -54,11 +54,11 @@ public class ContractorRestControllerV1 {
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED){
 
-            RestError restError = this.restErrorService.findByCode("U002");
+            RestMessage restMessage = this.restMessageService.findByCode("U002");
 
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         UserDto userDto = ObjectMapperUtils.map(user, UserDto.class);
@@ -75,8 +75,11 @@ public class ContractorRestControllerV1 {
     @GetMapping(value = "/customers/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getCustomer(@PathVariable("name") String userName){
 
-        if(userName == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(userName == null) {
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
         }
 
         User user = this.userService.findByUsername(userName);
@@ -85,11 +88,11 @@ public class ContractorRestControllerV1 {
                 || this.roleService.findUserRole(user, "ROLE_CONTRACTOR")
                 || this.roleService.findUserRole(user, "ROLE_ADMIN")){
 
-            RestError restError = this.restErrorService.findByCode("U001");
+            RestMessage restMessage = this.restMessageService.findByCode("U001");
 
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         UserDto userDto = ObjectMapperUtils.map(user, UserDto.class);
@@ -112,11 +115,11 @@ public class ContractorRestControllerV1 {
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED) {
 
-            RestError restError = this.restErrorService.findByCode("U002");
+            RestMessage restMessage = this.restMessageService.findByCode("U002");
 
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         this.userService.updateUserStatus(user, UserStatus.DELETED);

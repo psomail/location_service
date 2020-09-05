@@ -42,11 +42,11 @@ public class User extends BaseEntity {
     @Column(name = "phone")
     String phone;
 
-    @Column(name = "password")
-    String password;
+//    @Column(name = "password")
+//    String password;
 
-    @Column(name = "activation_code")
-    String activationCode;
+//    @Column(name = "activation_code")
+//    String activationCode;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
@@ -76,7 +76,7 @@ public class User extends BaseEntity {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", password='" + password + '\'' +
+//                ", password='" + password + '\'' +
                 ", roles=" + roles +
                 ", userStatus=" + userStatus +
                 '}';

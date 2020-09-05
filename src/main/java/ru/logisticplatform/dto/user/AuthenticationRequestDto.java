@@ -13,5 +13,5 @@ import lombok.experimental.FieldDefaults;
 @Data
 public class AuthenticationRequestDto {
     String username;
-    String password;
+//    String password;
 }

@@ -29,13 +29,13 @@
                 <constraints nullable="false"/>
             </column>
 
-            <column name="password" type="VARCHAR(255)">
-                <constraints nullable="false"/>
-            </column>
+            <!--<column name="password" type="VARCHAR(255)">-->
+                <!--<constraints nullable="false"/>-->
+            <!--</column>-->
 
-            <column name="activation_code" type="VARCHAR(255)">
-                <constraints nullable="true"/>
-            </column>
+            <!--<column name="activation_code" type="VARCHAR(255)">-->
+                <!--<constraints nullable="true"/>-->
+            <!--</column>-->
 
             <column name="status" type="VARCHAR(25)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -442,7 +442,7 @@
             <column name="phone" value="79119797777"/>
             <column name="first_name" value="adminfirst"/>
             <column name="last_name" value="adminsecond"/>
-            <column name="password" value="$2a$04$FyuSb5hiBcNoE0Oy4TDC2eMGB2qZpmMAc.uohHzpNxpJewYAqcp3u"/>
+            <!--<column name="password" value="$2a$04$FyuSb5hiBcNoE0Oy4TDC2eMGB2qZpmMAc.uohHzpNxpJewYAqcp3u"/>-->
             <column name="status" value="ACTIVE"/>
         </insert>
     </changeSet>
@@ -530,7 +530,7 @@
     </changeSet>
 
     <changeSet id="1.0.23" author="serg.perm">
-        <createTable tableName="rest_errors">
+        <createTable tableName="rest_message">
 
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -549,45 +549,52 @@
 
     <changeSet id="1.0.24" author="serg.perm">
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="U001"/>
             <column name="description" value="The customer is not found"/>
         </insert>
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="U002"/>
             <column name="description" value="The user is not found"/>
         </insert>
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="U003"/>
             <column name="description" value="The contractor is not found"/>
         </insert>
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="T001"/>
             <column name="description" value="The transport type is not found"/>
         </insert>
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="T002"/>
             <column name="description" value="The transportation is not found"/>
         </insert>
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="S001"/>
             <column name="description" value="The request is not supported"/>
         </insert>
 
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="T003"/>
             <column name="description" value="The transportation missing to create"/>
         </insert>
-        <insert tableName="rest_errors">
+        <insert tableName="rest_message">
             <column name="code" value="T004"/>
             <column name="description" value="The transportation is already present"/>
         </insert>
 
+    </changeSet>
+
+    <changeSet id="1.0.25" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="T005"/>
+            <column name="description" value="The transportation deleted"/>
+        </insert>
     </changeSet>
 
 </databaseChangeLog>

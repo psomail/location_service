@@ -3,6 +3,7 @@ package ru.logisticplatform.mq;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.user.User;
@@ -25,20 +26,33 @@ public class Consumer {
     @RabbitListener(queues = "create.user.queue")
         public void createUser(UserMq userMq){
 
-        userMq.getRoles().forEach(role->role.setId(roleService.findByRoleName(role.getName()).getId()));
+        User user = userService.findByUsername(userMq.getUsername());
 
-        this.userService.signUp(ObjectMapperUtils.map(userMq, User.class));
+        if(user == null){
+            userMq.getRoles().forEach(role->role.setId(roleService.findByRoleName(role.getName()).getId()));
 
-        log.info("!!!!!!!!!! create consume: " + userMq);
-    }
+            User newUser = ObjectMapperUtils.map(userMq, User.class);
+            this.userService.signUp(newUser);
 
-        @RabbitListener(queues = "update.user.queue")
-        public void updateUser(String msg){
-            log.info("!!!!!!!!!! update consume: " + msg);
+            log.info("IN Consumer createUser() - user: {} successfully registered", userMq.getUsername());
         }
 
+    }
+
+    @RabbitListener(queues = "update.user.queue")
+    public void updateUser(UserMq userMq){
+
+        userMq.getRoles().forEach(role->role.setId(roleService.findByRoleName(role.getName()).getId()));
+        this.userService.updateUser(userMq);
+
+        log.info("IN Consumer updateUser() - user: {} successfully updated", userMq.getUsername());
+    }
+
     @RabbitListener(queues = "delete.user.queue")
-    public void deleteUser(String msg){
-        log.info("!!!!!!!!!! delete consume: " + msg);
+    public void deleteUser(UserMq userMq){
+
+       User userDelete = this.userService.findByUsername(userMq.getUsername());
+       this.userService.delete(userDelete);
+       log.info("IN Consumer deleteUser() user: {} successfully deleted", userMq.getUsername());
     }
 }

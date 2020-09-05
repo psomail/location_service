@@ -1,5 +1,6 @@
 package ru.logisticplatform.service.transportation;
 
+import ru.logisticplatform.model.transportation.TransportType;
 import ru.logisticplatform.model.transportation.Transportation;
 import ru.logisticplatform.model.transportation.TransportationStatus;
 import ru.logisticplatform.model.user.User;
@@ -17,6 +18,11 @@ public interface TransportationService {
     List<Transportation> findAllByUserAndStatus(User user, TransportationStatus status);
 
     List<Transportation> findAllByUserAndStatusNotLike(User user, TransportationStatus status);
+
+    Transportation findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(TransportType transportType
+                                                                                    ,String model
+                                                                                    ,User user
+                                                                                    ,TransportationStatus transportationStatus);
 
     Transportation createTransportation(Transportation transportation);
 

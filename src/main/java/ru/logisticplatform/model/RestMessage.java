@@ -7,12 +7,12 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "rest_errors")
+@Table(name = "rest_message")
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class RestError {
+public class RestMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

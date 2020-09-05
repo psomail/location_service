@@ -6,20 +6,19 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import ru.logisticplatform.dto.RestErrorDto;
-import ru.logisticplatform.dto.transportation.TransportTypeDto;
+import ru.logisticplatform.dto.RestMessageDto;
 import ru.logisticplatform.dto.transportation.TransportationCreateDto;
 import ru.logisticplatform.dto.transportation.TransportationDto;
-import ru.logisticplatform.dto.user.SignUpUserDto;
+import ru.logisticplatform.dto.transportation.TransportationUpdateDto;
+import ru.logisticplatform.dto.transportation.TransportationUpdateStatusDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
-import ru.logisticplatform.model.RestError;
-import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.transportation.TransportType;
 import ru.logisticplatform.model.transportation.Transportation;
 import ru.logisticplatform.model.transportation.TransportationStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.model.user.UserStatus;
-import ru.logisticplatform.service.RestErrorService;
+import ru.logisticplatform.service.RestMessageService;
 import ru.logisticplatform.service.transportation.TransportTypeService;
 import ru.logisticplatform.service.transportation.TransportationService;
 import ru.logisticplatform.service.user.RoleService;
@@ -41,20 +40,20 @@ public class TransportationRestControllerV1 {
 
     private final TransportationService transportationService;
     private final TransportTypeService transportTypeService;
-    private final RestErrorService restErrorService;
+    private final RestMessageService restMessageService;
     private final UserService userService;
     private final RoleService roleService;
 
     @Autowired
     public TransportationRestControllerV1(TransportationService transportationService
-                                            ,TransportTypeService transportTypeService
-                                            ,RestErrorService restErrorService
-                                            ,UserService userService
-                                            ,RoleService roleService){
+                                            , TransportTypeService transportTypeService
+                                            , RestMessageService restMessageService
+                                            , UserService userService
+                                            , RoleService roleService){
 
         this.transportationService = transportationService;
         this.transportTypeService = transportTypeService;
-        this.restErrorService = restErrorService;
+        this.restMessageService = restMessageService;
         this.userService = userService;
         this.roleService = roleService;
     }
@@ -68,10 +67,6 @@ public class TransportationRestControllerV1 {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getTransportaionById(@PathVariable("id") Long transportationId, Authentication authentication){
 
-        if (transportationId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         Transportation transportation = this.transportationService.findById(transportationId);
 
         User user = this.userService.findByUsername(authentication.getName());
@@ -81,10 +76,10 @@ public class TransportationRestControllerV1 {
                                     || user.getUserStatus() == UserStatus.DELETED
                                     ||!user.equals(transportation.getUser())){
 
-            RestError restError = this.restErrorService.findByCode("T002");
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
@@ -106,10 +101,10 @@ public class TransportationRestControllerV1 {
         if ( user == null   || user.getUserStatus() == UserStatus.DELETED
                             || !this.roleService.findUserRole(user, "ROLE_CONTRACTOR")){
 
-            RestError restError = this.restErrorService.findByCode("T002");
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         List<Transportation> transportations = this.transportationService.findAllByUserAndStatusNotLike(user
@@ -117,10 +112,10 @@ public class TransportationRestControllerV1 {
 
         if(transportations == null || transportations.isEmpty()){
 
-            RestError restError = this.restErrorService.findByCode("T002");
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         List<TransportationDto> transportationsDto = ObjectMapperUtils.mapAll(transportations, TransportationDto.class);
@@ -128,49 +123,226 @@ public class TransportationRestControllerV1 {
         return new ResponseEntity<List<TransportationDto>>(transportationsDto, HttpStatus.OK);
     }
 
+    /**
+     *
+     * @param transportationCreateDto
+     * @param authentication
+     * @return
+     */
+    @PostMapping(value = "/create/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createTransportaion(@RequestBody TransportationCreateDto transportationCreateDto
+                                                                ,Authentication authentication){
 
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createTransportaion(@RequestBody TransportationCreateDto transportationCreate){
+        if (transportationCreateDto == null) {
 
-        if (transportationCreate == null) {
-
-            RestError restError = this.restErrorService.findByCode("T003");
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            RestMessage restMessage = this.restMessageService.findByCode("T003");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-//        if(this.transportationService.findByTransportation(transportationCreate) != null) {
-//
-//            RestError restError = this.restErrorService.findByCode("T004");
-//            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
-//            return new ResponseEntity<RestErrorDto>(HttpStatus.FOUND);
-//        }
+        User user = userService.findByUsername(authentication.getName());
 
+        if (user == null
+                || user.getUserStatus() == UserStatus.DELETED
+                || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
 
-        return null;
+            RestMessage restMessage = this.restMessageService.findByCode("U003");
+
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Transportation transportation = ObjectMapperUtils.map(transportationCreateDto, Transportation.class);
+        TransportType transportType = transportTypeService.findById(transportationCreateDto.getTransportType().getId());
+
+        if(transportType == null){
+
+            RestMessage restMessage = this.restMessageService.findByCode("T001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        transportation.setTransportType(transportType);
+        transportation.setUser(user);
+
+        if(this.transportationService.findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(transportType
+                                                                                    ,transportationCreateDto.getModel()
+                                                                                    ,user
+                                                                                    ,TransportationStatus.DELETED) != null){
+            RestMessage restMessage = this.restMessageService.findByCode("T004");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.FOUND);
+        }
+
+        this.transportationService.createTransportation(transportation);
+        TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
+
+        return new ResponseEntity<TransportationDto>(transportationDto, HttpStatus.CREATED);
+    }
+
+    /**
+     *
+     * @param authentication
+     * @param transportationUpdateDto
+     * @return
+     */
+
+    @PutMapping(value = "/update/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateTransportaion(Authentication authentication
+                                                    ,@RequestBody TransportationUpdateDto transportationUpdateDto){
+
+        if (transportationUpdateDto == null) {
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+
+        if (user == null
+                || user.getUserStatus() == UserStatus.DELETED
+                || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U003");
+
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Transportation transportation = transportationService.findById(transportationUpdateDto.getId());
+
+        if(transportation == null
+                            || transportation.getTransportationStatus() == TransportationStatus.DELETED
+                            || user.getId() != transportation.getUser().getId()){
+            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        TransportType transportType = transportTypeService.findById(transportationUpdateDto.getTransportType().getId());
+
+        if(transportType == null){
+
+            RestMessage restMessage = this.restMessageService.findByCode("T001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        transportation.setTransportType(transportType);
+        transportation.setModel(transportationUpdateDto.getModel());
+
+        this.transportationService.updateTransportation(transportation);
+        TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
+
+        return new ResponseEntity<TransportationDto>(transportationDto, HttpStatus.CREATED);
+    }
+
+    /**
+     *
+     * @param authentication
+     * @param transportationUpdateStatusDto
+     * @return
+     */
+
+    @PutMapping(value = "/updatestatus/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateTransportaion(Authentication authentication
+                                            ,@RequestBody TransportationUpdateStatusDto transportationUpdateStatusDto){
+
+        if (transportationUpdateStatusDto == null
+                || transportationUpdateStatusDto.getTransportationStatus() == TransportationStatus.DELETED) {
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+
+        if (user == null
+                || user.getUserStatus() == UserStatus.DELETED
+                || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U003");
+
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Transportation transportation = transportationService.findById(transportationUpdateStatusDto.getId());
+
+        if(transportation == null
+                            || transportation.getTransportationStatus() == TransportationStatus.DELETED
+                            || user.getId() != transportation.getUser().getId()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        transportation.setTransportationStatus(transportationUpdateStatusDto.getTransportationStatus());
+        this.transportationService.updateTransportation(transportation);
+        TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
+
+        return new ResponseEntity<TransportationDto>(transportationDto, HttpStatus.OK);
     }
 
 
+    /**
+     *
+     * @param authentication
+     * @param transportTypeId
+     * @return
+     */
+
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> deleteTransportaion(@PathVariable("id") Long transportTypeId){
+    public ResponseEntity<?> deleteTransportaion(Authentication authentication, @PathVariable("id") Long transportTypeId){
 
         if(transportTypeId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
         }
+
+        User user = userService.findByUsername(authentication.getName());
+        if (user == null
+                || user.getUserStatus() == UserStatus.DELETED
+                || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U003");
+
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
         Transportation transportation = this.transportationService.findById(transportTypeId);
+        if(transportation == null
+                || transportation.getTransportationStatus() == TransportationStatus.DELETED
+                || user.getId() != transportation.getUser().getId()){
 
-        if (transportation == null) {
+            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            RestError restError = this.restErrorService.findByCode("T002");
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
-
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
+
         transportation.setTransportationStatus(TransportationStatus.DELETED);
 
         this.transportationService.updateTransportation(transportation);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        RestMessage restMessage = this.restMessageService.findByCode("T005");
+        RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+        return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.OK);
     }
 
 }

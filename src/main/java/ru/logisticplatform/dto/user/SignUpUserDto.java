@@ -23,7 +23,7 @@ public class SignUpUserDto {
     String lastName;
     String email;
     String phone;
-    String password;
+//    String password;
     UserStatus userStatus;
     List<RoleDto> roles;
 }

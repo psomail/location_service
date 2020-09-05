@@ -22,11 +22,9 @@ public class UserMq implements Serializable {
     String email;
     String phone;
     List<RoleDto> roles;
-    String password;
     UserStatus userStatus;
 
     public UserMq(@JsonProperty("username") String username,
-                  @JsonProperty("password") String password,
                   @JsonProperty("firstName") String firstName,
                   @JsonProperty("lastName") String lastName,
                   @JsonProperty("email") String email,
@@ -37,7 +35,6 @@ public class UserMq implements Serializable {
     ){
 
         this.username = username;
-        this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -74,7 +71,6 @@ public class UserMq implements Serializable {
     public String toString() {
         return "UserMq{" +
                 "username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

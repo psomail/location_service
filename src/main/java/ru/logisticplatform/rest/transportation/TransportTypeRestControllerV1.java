@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.logisticplatform.dto.RestErrorDto;
+import ru.logisticplatform.dto.RestMessageDto;
 import ru.logisticplatform.dto.transportation.TransportTypeDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
-import ru.logisticplatform.model.RestError;
+import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.transportation.TransportType;
-import ru.logisticplatform.service.RestErrorService;
+import ru.logisticplatform.service.RestMessageService;
 import ru.logisticplatform.service.transportation.TransportTypeService;
 
 import java.util.List;
@@ -24,13 +24,13 @@ import java.util.List;
 public class TransportTypeRestControllerV1 {
 
     private final TransportTypeService transportTypeService;
-    private final RestErrorService restErrorService;
+    private final RestMessageService restMessageService;
 
     @Autowired
     public TransportTypeRestControllerV1(TransportTypeService transportTypeService
-                                            ,RestErrorService restErrorService){
+                                            , RestMessageService restMessageService){
         this.transportTypeService = transportTypeService;
-        this.restErrorService = restErrorService;
+        this.restMessageService = restMessageService;
 
     }
 
@@ -50,11 +50,11 @@ public class TransportTypeRestControllerV1 {
         TransportType transportType = this.transportTypeService.findById(transportTypeId);
 
         if (transportType == null){
-            RestError restError = this.restErrorService.findByCode("T001");
+            RestMessage restMessage = this.restMessageService.findByCode("T001");
 
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         TransportTypeDto transportTypeDto = ObjectMapperUtils.map(transportType, TransportTypeDto.class);
@@ -74,11 +74,11 @@ public class TransportTypeRestControllerV1 {
         List<TransportType> transportType = this.transportTypeService.getAll();
 
         if(transportType.isEmpty()){
-            RestError restError = this.restErrorService.findByCode("T001");;
+            RestMessage restMessage = this.restMessageService.findByCode("T001");;
 
-            RestErrorDto restErrorDto= ObjectMapperUtils.map(restError, RestErrorDto.class);
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
-            return new ResponseEntity<RestErrorDto>(restErrorDto, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         List<TransportTypeDto> transportTypesDto = ObjectMapperUtils.mapAll(transportType, TransportTypeDto.class);

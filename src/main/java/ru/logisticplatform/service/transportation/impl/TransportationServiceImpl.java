@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.logisticplatform.model.transportation.TransportType;
 import ru.logisticplatform.model.transportation.Transportation;
 import ru.logisticplatform.model.transportation.TransportationStatus;
 import ru.logisticplatform.model.user.User;
@@ -99,21 +100,55 @@ public class TransportationServiceImpl implements TransportationService {
         List<Transportation> transportations = this.transportationRepository.findAllByUserAndTransportationStatusNotLike(user, status);
 
         if (transportations.isEmpty()){
-            log.warn("IN TransportationServiceImpl findAllByUserAndStatusNotLike - no transportations found by user: {} " +
+            log.warn("IN TransportationServiceImpl findAllByUserAndStatusNotLike() - no transportations found by user: {} " +
                     " and transportation status not like: {}", user.getUsername(), status.toString());
         }
 
         return transportations;
     }
 
+    /**
+     *
+     * @param transportType
+     * @param model
+     * @param user
+     * @return
+     */
+    @Override
+    public Transportation findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(TransportType transportType
+                                                                                                ,String model
+                                                                                                ,User user
+                                                                                                ,TransportationStatus transportationStatus){
+
+        Transportation transportation = this.transportationRepository
+                                            .findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(transportType
+                                                                                                                ,model
+                                                                                                                ,user
+                                                                                                                ,transportationStatus);
+        if(transportation == null) {
+            log.warn("IN TransportationServiceImpl findByTransportTypeAndModelAndUser() - no transportations found by transportType: {} " +
+                    ", model: {} , user: {} ", transportType.getName(), model, user.getUsername());
+        }
+        return transportation;
+    }
+
     @Override
     public Transportation createTransportation(Transportation transportation) {
-        return null;
+
+        this.transportationRepository.save(transportation);
+
+        log.info("IN TransportationServiceImpl createTransportation() - transportation ID: {} successfully created", transportation.getId());
+
+        return transportation;
     }
 
     @Override
     public Transportation updateTransportation(Transportation transportation) {
-        return null;
+
+        this.transportationRepository.save(transportation);
+        log.info("IN TransportationServiceImpl updateTransportation() - transportation ID: {} successfully updated", transportation.getId());
+
+        return transportation;
     }
 
     @Override

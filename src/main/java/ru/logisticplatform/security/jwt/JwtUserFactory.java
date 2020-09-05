@@ -22,7 +22,8 @@ public final class JwtUserFactory {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getEmail(),
-                user.getPassword(),
+              //  user.getPassword(),
+                "",
                 mapToGrantedAuthorities(new ArrayList<>(user.getRoles())),
                 user.getUserStatus().equals(UserStatus.ACTIVE),
                 user.getUpdated()
