@@ -33,6 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String CONTRACTOR_ENDPOINT = "/api/v1/contractors/**";
     private static final String TRANSPORT_TYPE_ENDPOINT = "/api/v1/transporttypes/**";
     private static final String TRANSPORTATION_ENDPOINT = "/api/v1/transportations/**";
+    private static final String TRANSPORTATION_LOCATIONS_ME_ENDPOINT = "/api/v1/transportations/locations/me/**";
 
 
     @Autowired
@@ -60,6 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(CONTRACTOR_ENDPOINT).hasRole("CONTRACTOR")
                 .antMatchers(TRANSPORT_TYPE_ENDPOINT).hasAnyRole("CONTRACTOR", "CUSTOMER")
                 .antMatchers(TRANSPORTATION_ENDPOINT).hasRole("CONTRACTOR")
+                .antMatchers(TRANSPORTATION_LOCATIONS_ME_ENDPOINT).hasRole("CONTRACTOR")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));

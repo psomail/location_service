@@ -6,14 +6,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
-
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransportationLocationDto {
-
-    TransportationDto transportation;
-    Double lat;
-    Double lon;
+public class TransportationTransportationLocationDto {
+    Long id;
 }
