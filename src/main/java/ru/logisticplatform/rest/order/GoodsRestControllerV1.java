@@ -6,18 +6,26 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.logisticplatform.dto.RestMessageDto;
 import ru.logisticplatform.dto.goods.CreateGoodsDto;
 import ru.logisticplatform.dto.goods.GoodsTypeDto;
 import ru.logisticplatform.dto.goods.GoodsDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
+import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsPrivate;
 import ru.logisticplatform.model.goods.GoodsStatus;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.order.Order;
 import ru.logisticplatform.model.user.User;
+import ru.logisticplatform.model.user.UserStatus;
+import ru.logisticplatform.service.RestMessageService;
 import ru.logisticplatform.service.goods.GoodsService;
 import ru.logisticplatform.service.goods.GoodsTypeService;
+import ru.logisticplatform.service.user.UserService;
 
 import java.util.List;
 
@@ -34,74 +42,84 @@ public class GoodsRestControllerV1 {
 
     private final GoodsService goodsService;
     private final GoodsTypeService goodsTypeService;
+    private final UserService userService;
+    private final RestMessageService restMessageService;
 
     @Autowired
-    public GoodsRestControllerV1(GoodsService goodsService, GoodsTypeService goodsTypeService) {
+    public GoodsRestControllerV1(GoodsService goodsService
+                                ,GoodsTypeService goodsTypeService
+                                ,UserService userService
+                                ,RestMessageService restMessageService) {
         this.goodsService = goodsService;
         this.goodsTypeService = goodsTypeService;
+        this.userService = userService;
+        this.restMessageService = restMessageService;
     }
 
-    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GoodsDto> getGoods(@PathVariable("id") Long goodsId){
+    /**
+     *
+     * @param authentication
+     * @return
+     */
+    @GetMapping(value = "", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> getGoodsByUser(Authentication authentication){
 
-        if(goodsId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        User user = this.userService.findByUsername(authentication.getName());
+
+        if ( user == null || user.getUserStatus() == UserStatus.DELETED){
+
+            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
+
+        List<Goods> goods = goodsService.findAllByUserAndStatusNotLike(user, GoodsStatus.DELETED);
+
+        if(goods == null || goods.isEmpty()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        List<GoodsDto> goodsDto = ObjectMapperUtils.mapAll(goods, GoodsDto.class);
+
+        return new ResponseEntity<List<GoodsDto>>(goodsDto, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param authentication
+     * @param goodsId
+     * @return
+     */
+
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('CUSTOMER')")
+    public ResponseEntity<?> getGoods(Authentication authentication, @PathVariable("id") Long goodsId){
 
         Goods goods = this.goodsService.findById(goodsId);
 
-        if(goods == null || goods.getGoodsStatus() == GoodsStatus.DELETED){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        User user = this.userService.findByUsername(authentication.getName());
+
+        if(goods == null    || goods.getGoodsStatus() == GoodsStatus.DELETED
+                            || user == null
+                            || user.getUserStatus() == UserStatus.DELETED
+                            ||!user.equals(goods.getUser())){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-        GoodsDto goodsUserDto = ObjectMapperUtils.map(goods, GoodsDto.class);
+        GoodsDto goodsDto = ObjectMapperUtils.map(goods, GoodsDto.class);
 
-        return new ResponseEntity<>(goodsUserDto, HttpStatus.OK);
+        return new ResponseEntity<GoodsDto>(goodsDto, HttpStatus.OK);
     }
-
-    /**
-     *
-     * @return
-     */
-
-    @GetMapping(value = "/goodstypes/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<GoodsTypeDto>> getAllGoodsType(){
-
-        List<GoodsType> goodsTypes = this.goodsTypeService.findAll();
-
-        if(goodsTypes.isEmpty()){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        List<GoodsTypeDto> goodsTypeUserDtos = ObjectMapperUtils.mapAll(goodsTypes, GoodsTypeDto.class);
-
-        return new ResponseEntity<>(goodsTypeUserDtos, HttpStatus.OK);
-    }
-
-    /**
-     *
-     * @param goodsTypeId
-     * @return
-     */
-
-    @GetMapping(value = "/goodstypes/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GoodsTypeDto> getGoodsType(@PathVariable("id") Long goodsTypeId){
-
-        if(goodsTypeId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        GoodsType goodsType = this.goodsTypeService.findById(goodsTypeId);
-
-        if(goodsType == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        GoodsTypeDto goodsTypeUserDto = ObjectMapperUtils.map(goodsType, GoodsTypeDto.class);
-
-        return new ResponseEntity<>(goodsTypeUserDto, HttpStatus.OK);
-    }
-
 
     /**
      *
@@ -110,22 +128,55 @@ public class GoodsRestControllerV1 {
      */
 
     @PostMapping(value = "/create/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CreateGoodsDto> createGoods(@RequestBody CreateGoodsDto goodsDto){
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> createGoods(Authentication authentication, @RequestBody CreateGoodsDto goodsDto){
         HttpHeaders headers = new HttpHeaders();
 
         if(goodsDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            RestMessage restMessage = this.restMessageService.findByCode("G003");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-        if(this.goodsService.findByGoodsDto(goodsDto) != null){
-            return new ResponseEntity<>(HttpStatus.FOUND);
+        User user = userService.findByUsername(authentication.getName());
+
+        if (user == null || user.getUserStatus() == UserStatus.DELETED) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        GoodsType goodsType = goodsTypeService.findById(goodsDto.getGoodsType().getId());
+        if(goodsType ==null){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        if(goodsService.findByGoodsDtoAndUser(goodsDto, user) != null){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G004");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.FOUND);
         }
 
         Goods goods = ObjectMapperUtils.map(goodsDto, Goods.class);
 
+        goods.setUser(user);
+        goods.setGoodsStatus(GoodsStatus.CREATED);
+
         this.goodsService.createGoods(goods);
 
-        return new ResponseEntity<>(goodsDto, headers, HttpStatus.CREATED);
+        GoodsDto createdGoodsDto = ObjectMapperUtils.map(goods, GoodsDto.class);
+
+        return new ResponseEntity<GoodsDto>(createdGoodsDto, headers, HttpStatus.CREATED);
     }
 
     /**
@@ -135,7 +186,8 @@ public class GoodsRestControllerV1 {
      */
 
     @PutMapping(value = "/update/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GoodsDto> updateGoods(@RequestBody GoodsDto goodsDto){
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> updateGoods(@RequestBody GoodsDto goodsDto){
         HttpHeaders headers = new HttpHeaders();
 
         if(goodsDto == null) {
@@ -167,7 +219,8 @@ public class GoodsRestControllerV1 {
      */
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Goods> deleteGoods(@PathVariable("id") Long goodsId){
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> deleteGoods(@PathVariable("id") Long goodsId){
 
         if(goodsId == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

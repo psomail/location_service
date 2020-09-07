@@ -62,9 +62,8 @@ public class GoodsServiceImpl implements GoodsService {
      */
 
     @Override
-    public List<Goods> findByGoodsDto(CreateGoodsDto goodsDto) {
+    public List<Goods> findByGoodsDtoAndUser(CreateGoodsDto goodsDto, User user) {
 
-        User user = userService.findById(goodsDto.getUser().getId());
         GoodsType goodsType = goodsTypeService.findById(goodsDto.getGoodsType().getId());
 
         List<Goods> goods = goodsRepository.findAllByNameAndGoodsTypeAndLenghtAndWidthAndHeightAndVolumeAndCarryingAndUser(goodsDto.getName()
@@ -116,6 +115,25 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsRepository.findAll();
     }
 
+    /**
+     *
+     * @param user
+     * @param status
+     * @return
+     */
+
+    @Override
+    public List<Goods> findAllByUserAndStatusNotLike(User user, GoodsStatus status) {
+
+        List<Goods> goods = goodsRepository.findAllByUserAndGoodsStatusNotLike(user, status);
+
+        if(goods.isEmpty()){
+            log.warn("IN GoodsServiceImpl findAllByUserAndStatusNotLike() - no goods found by user: {}" +
+                    " and goods status not like: {}",user.getUsername(), status.toString());
+        }
+
+        return goods;
+    }
 
     /**
      *

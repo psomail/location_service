@@ -9,6 +9,5 @@ public interface TransportationLocationService {
     TransportationLocation findByTransportation(Transportation transportation);
 
     TransportationLocation save(TransportationLocation transportationLocation);
-    //TransportationLocation update(TransportationLocation transportationLocation);
 
 }

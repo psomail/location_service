@@ -137,6 +137,7 @@ public class TransportationRestControllerV1 {
 
             RestMessage restMessage = this.restMessageService.findByCode("T003");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
@@ -288,7 +289,18 @@ public class TransportationRestControllerV1 {
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-        transportation.setTransportationStatus(transportationUpdateStatusDto.getTransportationStatus());
+        TransportationStatus transportationStatus = transportationUpdateStatusDto.getTransportationStatus();
+
+        if(transportationStatus == TransportationStatus.ACTIVE
+                && !transportationService.findAllByUserAndStatus(user, TransportationStatus.ACTIVE).isEmpty()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("T008");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.FOUND);
+        }
+
+        transportation.setTransportationStatus(transportationStatus);
         this.transportationService.updateTransportation(transportation);
         TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
 

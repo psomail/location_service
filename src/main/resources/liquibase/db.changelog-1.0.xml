@@ -609,4 +609,37 @@
         </insert>
     </changeSet>
 
+    <changeSet id="1.0.27" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="T008"/>
+            <column name="description" value="The active transportation already exists"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.28" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="G001"/>
+            <column name="description" value="The goods type is not found"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.29" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="G002"/>
+            <column name="description" value="The goods is not found"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="1.0.30" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="G003"/>
+            <column name="description" value="The goods missing to create"/>
+        </insert>
+        <insert tableName="rest_message">
+            <column name="code" value="G004"/>
+            <column name="description" value="The goods  is already present"/>
+        </insert>
+    </changeSet>
+
+
 </databaseChangeLog>

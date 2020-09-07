@@ -11,9 +11,11 @@ public interface GoodsService {
 
     Goods findById(Long id);
 
-    List<Goods> findByGoodsDto(CreateGoodsDto goodsDto);
+    List<Goods> findByGoodsDtoAndUser(CreateGoodsDto goodsDto, User user);
 
     List<Goods> findAllByUser(User user);
+
+    List<Goods> findAllByUserAndStatusNotLike(User user, GoodsStatus status);
 
     List<Goods> findAll();
 

@@ -2,11 +2,16 @@ package ru.logisticplatform.service.transportation.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.logisticplatform.model.transportation.Transportation;
 import ru.logisticplatform.model.transportation.TransportationLocation;
 import ru.logisticplatform.repository.transportation.TransportationLocationRepository;
 import ru.logisticplatform.service.transportation.TransportationLocationService;
+
+import java.util.Calendar;
+import java.util.Date;
 
 @Service
 @Slf4j
@@ -30,7 +35,7 @@ public class TransportationLocationServiceImpl implements TransportationLocation
             return null;
         }
 
-        log.info("IN TransportationServiceImpl findById - transportation: {} by transportation id: {}", transportation.getId());
+        log.info("IN TransportationLocationServiceImpl findById - transportation: {} by transportation id: {}", transportation.getId());
 
         return transportationLocation;
     }
@@ -43,9 +48,15 @@ public class TransportationLocationServiceImpl implements TransportationLocation
 
         return transportationLocationRepository.save(transportationLocation);
     }
-//
-//    @Override
-//    public TransportationLocation update(TransportationLocation transportationLocation) {
-//        return null;
-//    }
+
+    @Scheduled(initialDelay = 10000, fixedDelayString = "${schedule.delete.transportation.location}")
+    @Transactional
+    public void deleteSchedule() {
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        calendar.add(Calendar.MINUTE, -20);
+        Date previousMinute = calendar.getTime();
+        transportationLocationRepository.deleteAllByUpdatedBefore(previousMinute);
+        log.info("IN TransportationLocationServiceImpl deleteSchedule() - deleted offline transportation");
+    }
 }

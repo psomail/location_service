@@ -25,5 +25,4 @@ public class CreateGoodsDto {
     Double height;
     Double volume;
     Double carrying;
-    UserForCreateGoodsDto user;
 }

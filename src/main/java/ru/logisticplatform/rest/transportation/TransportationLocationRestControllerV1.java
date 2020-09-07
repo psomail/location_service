@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.RestMessageDto;
 import ru.logisticplatform.dto.transportation.TransportationDto;
 import ru.logisticplatform.dto.transportation.TransportationLocationDto;
+import ru.logisticplatform.dto.transportation.TransportationLocationSendDto;
 import ru.logisticplatform.dto.transportation.TransportationTransportationLocationDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestMessage;
@@ -24,6 +25,7 @@ import ru.logisticplatform.service.user.RoleService;
 import ru.logisticplatform.service.user.UserService;
 
 import java.awt.*;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -49,13 +51,19 @@ public class TransportationLocationRestControllerV1{
         this.restMessageService = restMessageService;
     }
 
-    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
+    /**
+     *
+     * @param authentication
+     * @return
+     */
+    @GetMapping(value = "/me/", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> myLocations(Authentication authentication){
 
         User user = this.userService.findByUsername(authentication.getName());
 
         if (user == null || user.getUserStatus() == UserStatus.NOT_ACTIVE
-                         || user.getUserStatus() == UserStatus.DELETED){
+                         || user.getUserStatus() == UserStatus.DELETED
+                         || this.roleService.findUserRole(user, "ROLE_CUSTOMER")){
 
             RestMessage restMessage = this.restMessageService.findByCode("U003");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
@@ -88,10 +96,17 @@ public class TransportationLocationRestControllerV1{
         // TransportationLocation transportationLocation = transportationLocationService.findByTransportation()
     }
 
-    @PostMapping(value = "/create/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> registrateTransportaionLocation(Authentication authentication,
-                                                         @RequestBody TransportationLocationDto transportationLocationDto){
-        if (transportationLocationDto == null) {
+
+    /**
+     *
+     * @param authentication
+     * @param transportationLocationSendDto
+     * @return
+     */
+    @PostMapping(value = "/send/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> registerTransportaionLocation(Authentication authentication,
+                                                         @RequestBody TransportationLocationSendDto transportationLocationSendDto){
+        if (transportationLocationSendDto == null) {
 
             RestMessage restMessage = this.restMessageService.findByCode("S001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
@@ -103,6 +118,7 @@ public class TransportationLocationRestControllerV1{
 
         if (user == null
                 || user.getUserStatus() == UserStatus.DELETED
+                || user.getUserStatus() == UserStatus.NOT_ACTIVE
                 || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
 
             RestMessage restMessage = this.restMessageService.findByCode("U003");
@@ -111,21 +127,32 @@ public class TransportationLocationRestControllerV1{
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-        Transportation transportation = transportationService.findById(transportationLocationDto
-                                                                        .getTransportation()
-                                                                        .getId());
+        List<Transportation> transportations = transportationService.findAllByUserAndStatus(user, TransportationStatus.ACTIVE);
 
-        TransportationLocation transportationLocation = transportationLocationService.findByTransportation(transportation);
+        if(transportations.isEmpty()){
+            RestMessage restMessage = this.restMessageService.findByCode("T006");
+            RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        TransportationLocation transportationLocation = transportationLocationService.findByTransportation(transportations.get(0));
 
         if(transportationLocation == null){
-
-            TransportationLocation transportationLocation1New = ObjectMapperUtils.map(transportationLocationDto, TransportationLocation.class);
-            transportationLocationService.save(transportationLocation1New);
+            TransportationLocation transportationLocation1New = ObjectMapperUtils.map(transportationLocationSendDto, TransportationLocation.class);
+            transportationLocation1New.setTransportation(transportations.get(0));
+            TransportationLocation registeredTransportationLocation = transportationLocationService.save(transportationLocation1New);
+            TransportationLocationDto transportationLocationDto = ObjectMapperUtils.map(registeredTransportationLocation
+                                                                                        ,TransportationLocationDto.class);
+            return new ResponseEntity<TransportationLocationDto>(transportationLocationDto, HttpStatus.OK);
         }
-        else{
-            transportationLocationService.save(transportationLocation);
-        }
 
-        return  null;
+        transportationLocation.setLat(transportationLocationSendDto.getLat());
+        transportationLocation.setLon(transportationLocationSendDto.getLon());
+        transportationLocation.setUpdated(new Date());
+        TransportationLocation registeredTransportationLocation = transportationLocationService.save(transportationLocation);
+        TransportationLocationDto transportationLocationDto = ObjectMapperUtils.map(registeredTransportationLocation
+                                                                                    ,TransportationLocationDto.class);
+        return new ResponseEntity<TransportationLocationDto>(transportationLocationDto, HttpStatus.OK);
     }
 }

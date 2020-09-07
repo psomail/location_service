@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import ru.logisticplatform.dto.goods.GoodsTypeForCreateGoodsDto;
 import ru.logisticplatform.dto.goods.UserForCreateGoodsDto;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsStatus;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.user.User;
 
@@ -29,4 +30,6 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
                                                                                                 ,Double volume
                                                                                                 ,Double carrying
                                                                                                 ,User user);
+
+    List<Goods> findAllByUserAndGoodsStatusNotLike(User user, GoodsStatus status);
  }
