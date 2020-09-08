@@ -30,6 +30,7 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
                                                                                                 ,Double volume
                                                                                                 ,Double carrying
                                                                                                 ,User user);
+    List<Goods> findAllByUserAndGoodsStatus(User user, GoodsStatus status);
 
     List<Goods> findAllByUserAndGoodsStatusNotLike(User user, GoodsStatus status);
  }

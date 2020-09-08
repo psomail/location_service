@@ -17,6 +17,8 @@ public interface GoodsService {
 
     List<Goods> findAllByUserAndStatusNotLike(User user, GoodsStatus status);
 
+    List<Goods> findAllByUserAndStatus(User user, GoodsStatus status);
+
     List<Goods> findAll();
 
     Goods createGoods(Goods goods);

@@ -13,6 +13,7 @@ import ru.logisticplatform.dto.RestMessageDto;
 import ru.logisticplatform.dto.goods.CreateGoodsDto;
 import ru.logisticplatform.dto.goods.GoodsTypeDto;
 import ru.logisticplatform.dto.goods.GoodsDto;
+import ru.logisticplatform.dto.goods.GoodsUpdateStatusDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.goods.Goods;
@@ -187,30 +188,117 @@ public class GoodsRestControllerV1 {
 
     @PutMapping(value = "/update/", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<?> updateGoods(@RequestBody GoodsDto goodsDto){
+    public ResponseEntity<?> updateGoods(Authentication authentication, @RequestBody GoodsDto goodsDto){
         HttpHeaders headers = new HttpHeaders();
 
         if(goodsDto == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+
+        if (user == null || user.getUserStatus() == UserStatus.DELETED) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         Goods goods = this.goodsService.findById(goodsDto.getId());
 
-        if (goods == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (goods == null
+                        ||goods.getGoodsStatus() == GoodsStatus.DELETED
+                        ||user.getId() != goods.getUser().getId()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-        Goods updateGoods = ObjectMapperUtils.map(goodsDto, Goods.class);
-        updateGoods.setGoodsPrivate(goods.getGoodsPrivate());
-        updateGoods.setUser(goods.getUser());
-        updateGoods.setGoodsStatus(goods.getGoodsStatus());
-        updateGoods.setUpdated(goods.getUpdated());
-        updateGoods.setCreated(goods.getCreated());
+        GoodsType goodsType = goodsTypeService.findById(goodsDto.getGoodsType().getId());
 
-        this.goodsService.updateGoods(updateGoods);
+        if(goodsType == null){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        goods.setName(goodsDto.getName());
+        goods.setGoodsType(goodsType);
+        goods.setLenght(goodsDto.getLenght());
+        goods.setWidth(goodsDto.getWidth());
+        goods.setHeight(goodsDto.getHeight());
+        goods.setVolume(goodsDto.getVolume());
+        goods.setCarrying(goodsDto.getCarrying());
+
+        this.goodsService.updateGoods(goods);
 
         return new ResponseEntity<>(goodsDto, headers, HttpStatus.OK);
     }
+
+    @PutMapping(value = "/updatestatus/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> updateGoodsStatus(Authentication authentication, @RequestBody GoodsUpdateStatusDto goodsUpdateStatusDto){
+        HttpHeaders headers = new HttpHeaders();
+
+        if(goodsUpdateStatusDto == null) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+
+        if (user == null || user.getUserStatus() == UserStatus.DELETED) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Goods goods = this.goodsService.findById(goodsUpdateStatusDto.getId());
+
+        if (goods == null
+                ||goods.getGoodsStatus() == GoodsStatus.DELETED
+                ||user.getId() != goods.getUser().getId()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        GoodsStatus goodsStatus = goodsUpdateStatusDto.getGoodsStatus();
+
+        if(goodsStatus == GoodsStatus.ACTIVE
+                    && !goodsService.findAllByUserAndStatus(user, GoodsStatus.ACTIVE).isEmpty()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G005");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.FOUND);
+        }
+
+        goods.setGoodsStatus(goodsStatus);
+
+        goodsService.updateGoods(goods);
+
+        GoodsDto goodsDto = ObjectMapperUtils.map(goods, GoodsDto.class);
+
+        return new ResponseEntity<GoodsDto>(goodsDto, headers, HttpStatus.OK);
+    }
+
 
     /**
      *
@@ -220,23 +308,46 @@ public class GoodsRestControllerV1 {
 
     @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("hasRole('CUSTOMER')")
-    public ResponseEntity<?> deleteGoods(@PathVariable("id") Long goodsId){
+    public ResponseEntity<?> deleteGoods(Authentication authentication, @PathVariable("id") Long goodsId){
+        HttpHeaders headers = new HttpHeaders();
 
-        if(goodsId == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if(goodsId == null) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+        if (user == null || user.getUserStatus() == UserStatus.DELETED) {
+
+            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         Goods goods = this.goodsService.findById(goodsId);
 
-        if (goods == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (goods == null
+                ||goods.getGoodsStatus() == GoodsStatus.DELETED
+                ||user.getId() != goods.getUser().getId()){
+
+            RestMessage restMessage = this.restMessageService.findByCode("G002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         goods.setGoodsStatus(GoodsStatus.DELETED);
 
-        this.goodsService.updateGoods(goods);
+        goodsService.updateGoods(goods);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        RestMessage restMessage = this.restMessageService.findByCode("G006");
+        RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+        return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.OK);
     }
 
 

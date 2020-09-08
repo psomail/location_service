@@ -135,6 +135,19 @@ public class GoodsServiceImpl implements GoodsService {
         return goods;
     }
 
+    @Override
+    public List<Goods> findAllByUserAndStatus(User user, GoodsStatus status) {
+
+        List<Goods> goods = goodsRepository.findAllByUserAndGoodsStatus(user, status);
+
+        if (goods.isEmpty()){
+            log.warn("IN GoodsServiceImpl findAllByUserAndStatus - no goods found by user: {} " +
+                    " and goods status: {}", user.getUsername(), status.toString());
+        }
+
+        return goods;
+    }
+
     /**
      *
      * @param goods

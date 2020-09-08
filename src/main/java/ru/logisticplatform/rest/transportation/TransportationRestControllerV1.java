@@ -253,7 +253,7 @@ public class TransportationRestControllerV1 {
      */
 
     @PutMapping(value = "/updatestatus/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateTransportaion(Authentication authentication
+    public ResponseEntity<?> updateTransportaionStatus(Authentication authentication
                                             ,@RequestBody TransportationUpdateStatusDto transportationUpdateStatusDto){
 
         if (transportationUpdateStatusDto == null
@@ -319,6 +319,7 @@ public class TransportationRestControllerV1 {
     public ResponseEntity<?> deleteTransportaion(Authentication authentication, @PathVariable("id") Long transportTypeId){
 
         if(transportTypeId == null){
+
             RestMessage restMessage = this.restMessageService.findByCode("S001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
