@@ -1,4 +1,4 @@
-package ru.logisticplatform.dto.transportation;
+package ru.logisticplatform.dto.transportation.location;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -9,6 +9,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransportationTransportationLocationDto {
-    Long id;
+public class TransportationLocationSendDto {
+
+    Double lat;
+    Double lon;
 }

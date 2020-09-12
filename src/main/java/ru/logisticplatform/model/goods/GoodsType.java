@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.BaseEntity;
+import ru.logisticplatform.model.transportation.Transportation;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,6 +22,9 @@ public class GoodsType extends BaseEntity {
     @OneToMany(mappedBy = "goodsType", fetch = FetchType.LAZY)
     //@JsonIgnore
     List<Goods> goods;
+
+    @ManyToMany(mappedBy = "goodsType", fetch = FetchType.LAZY)
+    List<Transportation> transportations;
 
     @Override
     public String toString() {

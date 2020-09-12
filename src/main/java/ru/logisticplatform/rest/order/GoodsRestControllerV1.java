@@ -134,10 +134,8 @@ public class GoodsRestControllerV1 {
         HttpHeaders headers = new HttpHeaders();
 
         if(goodsDto == null) {
-
-            RestMessage restMessage = this.restMessageService.findByCode("G003");
+            RestMessage restMessage = restMessageService.findByCode("G003");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
-
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
@@ -145,7 +143,7 @@ public class GoodsRestControllerV1 {
 
         if (user == null || user.getUserStatus() == UserStatus.DELETED) {
 
-            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessage restMessage = restMessageService.findByCode("U001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -154,7 +152,7 @@ public class GoodsRestControllerV1 {
         GoodsType goodsType = goodsTypeService.findById(goodsDto.getGoodsType().getId());
         if(goodsType ==null){
 
-            RestMessage restMessage = this.restMessageService.findByCode("G001");
+            RestMessage restMessage = restMessageService.findByCode("G001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -162,7 +160,7 @@ public class GoodsRestControllerV1 {
 
         if(goodsService.findByGoodsDtoAndUser(goodsDto, user) != null){
 
-            RestMessage restMessage = this.restMessageService.findByCode("G004");
+            RestMessage restMessage = restMessageService.findByCode("G004");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.FOUND);

@@ -63,6 +63,18 @@ public class TransportationServiceImpl implements TransportationService {
         return transportations;
     }
 
+    @Override
+    public List<Transportation> findAllByTransportationStatus(TransportationStatus status) {
+
+        List<Transportation> transportations = this.transportationRepository.findAllByTransportationStatus(status);
+
+        if (transportations.isEmpty()){
+            log.warn("IN TransportationServiceImpl findAllByTransportationStatus - no transportations found by status: {}", status.toString());
+        }
+
+        return transportations;
+    }
+
     /**
      *
      * @param user
@@ -116,10 +128,9 @@ public class TransportationServiceImpl implements TransportationService {
      */
     @Override
     public Transportation findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(TransportType transportType
-                                                                                                ,String model
-                                                                                                ,User user
-                                                                                                ,TransportationStatus transportationStatus){
-
+                                                                                        ,String model
+                                                                                        ,User user
+                                                                                        ,TransportationStatus transportationStatus){
         Transportation transportation = this.transportationRepository
                                             .findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(transportType
                                                                                                                 ,model
@@ -135,7 +146,7 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public Transportation createTransportation(Transportation transportation) {
 
-        this.transportationRepository.save(transportation);
+        transportationRepository.save(transportation);
 
         log.info("IN TransportationServiceImpl createTransportation() - transportation ID: {} successfully created", transportation.getId());
 

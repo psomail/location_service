@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.BaseEntity;
 import ru.logisticplatform.model.deal.Deal;
 import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.user.User;
 
 import javax.persistence.*;
@@ -36,10 +37,10 @@ public class Transportation extends BaseEntity {
     TransportationStatus transportationStatus = TransportationStatus.CREATED;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "transportations_goods",
+    @JoinTable(name = "transportations_goodstype",
             joinColumns = {@JoinColumn(name = "transportations_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "goods_id", referencedColumnName = "id")})
-    List<Goods> goods;
+            inverseJoinColumns = {@JoinColumn(name = "goodstype_id", referencedColumnName = "id")})
+    List<GoodsType> goodsType;
 
     @OneToMany(mappedBy = "transportation", fetch = FetchType.LAZY)
     List<Deal> deals;

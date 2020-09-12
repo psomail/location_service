@@ -9,4 +9,6 @@ public interface TransportTypeService {
     TransportType findById(Long id);
 
     List<TransportType> getAll();
+
+    List<TransportType> findByListOfId(List<Long> ids);
 }

@@ -7,24 +7,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.logisticplatform.dto.RestMessageDto;
+import ru.logisticplatform.dto.goods.GoodsTypeDto;
+import ru.logisticplatform.dto.goods.GoodsTypeForCreateGoodsDto;
 import ru.logisticplatform.dto.transportation.TransportationCreateDto;
 import ru.logisticplatform.dto.transportation.TransportationDto;
 import ru.logisticplatform.dto.transportation.TransportationUpdateDto;
 import ru.logisticplatform.dto.transportation.TransportationUpdateStatusDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestMessage;
+import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.transportation.TransportType;
 import ru.logisticplatform.model.transportation.Transportation;
 import ru.logisticplatform.model.transportation.TransportationStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.service.RestMessageService;
+import ru.logisticplatform.service.goods.GoodsTypeService;
 import ru.logisticplatform.service.transportation.TransportTypeService;
 import ru.logisticplatform.service.transportation.TransportationService;
 import ru.logisticplatform.service.user.RoleService;
 import ru.logisticplatform.service.user.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * REST controller for {@link Transportation} connected requests.
@@ -40,6 +45,7 @@ public class TransportationRestControllerV1 {
 
     private final TransportationService transportationService;
     private final TransportTypeService transportTypeService;
+    private final GoodsTypeService goodsTypeService;
     private final RestMessageService restMessageService;
     private final UserService userService;
     private final RoleService roleService;
@@ -47,12 +53,14 @@ public class TransportationRestControllerV1 {
     @Autowired
     public TransportationRestControllerV1(TransportationService transportationService
                                             , TransportTypeService transportTypeService
+                                            , GoodsTypeService goodsTypeService
                                             , RestMessageService restMessageService
                                             , UserService userService
                                             , RoleService roleService){
 
         this.transportationService = transportationService;
         this.transportTypeService = transportTypeService;
+        this.goodsTypeService = goodsTypeService;
         this.restMessageService = restMessageService;
         this.userService = userService;
         this.roleService = roleService;
@@ -143,28 +151,36 @@ public class TransportationRestControllerV1 {
 
         User user = userService.findByUsername(authentication.getName());
 
-        if (user == null
-                || user.getUserStatus() == UserStatus.DELETED
-                || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
+        if (user == null || user.getUserStatus() == UserStatus.DELETED
+                         || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
 
             RestMessage restMessage = this.restMessageService.findByCode("U003");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
-
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         Transportation transportation = ObjectMapperUtils.map(transportationCreateDto, Transportation.class);
         TransportType transportType = transportTypeService.findById(transportationCreateDto.getTransportType().getId());
 
-        if(transportType == null){
+        List<Long> ids = transportationCreateDto.getGoodsType().stream()
+                                                                .map(GoodsTypeForCreateGoodsDto::getId)
+                                                                .collect(Collectors.toList());
+        List<GoodsType> goodsTypes = goodsTypeService.findAllByIds(ids);
 
+        if(transportType == null){
             RestMessage restMessage = this.restMessageService.findByCode("T001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
 
+        if(goodsTypes.isEmpty()){
+            RestMessage restMessage = this.restMessageService.findByCode("G001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         transportation.setTransportType(transportType);
+        transportation.setGoodsType(goodsTypes);
         transportation.setUser(user);
 
         if(this.transportationService.findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(transportType
@@ -177,7 +193,7 @@ public class TransportationRestControllerV1 {
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.FOUND);
         }
 
-        this.transportationService.createTransportation(transportation);
+        transportationService.createTransportation(transportation);
         TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
 
         return new ResponseEntity<TransportationDto>(transportationDto, HttpStatus.CREATED);
@@ -196,7 +212,7 @@ public class TransportationRestControllerV1 {
 
         if (transportationUpdateDto == null) {
 
-            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessage restMessage = restMessageService.findByCode("S001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
@@ -206,9 +222,9 @@ public class TransportationRestControllerV1 {
 
         if (user == null
                 || user.getUserStatus() == UserStatus.DELETED
-                || this.roleService.findUserRole(user, "ROLE_CUSTOMER")) {
+                || roleService.findUserRole(user, "ROLE_CUSTOMER")) {
 
-            RestMessage restMessage = this.restMessageService.findByCode("U003");
+            RestMessage restMessage = restMessageService.findByCode("U003");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -220,7 +236,7 @@ public class TransportationRestControllerV1 {
                             || transportation.getTransportationStatus() == TransportationStatus.DELETED
                             || user.getId() != transportation.getUser().getId()){
 
-            RestMessage restMessage = this.restMessageService.findByCode("T002");
+            RestMessage restMessage = restMessageService.findByCode("T002");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -228,18 +244,30 @@ public class TransportationRestControllerV1 {
 
         TransportType transportType = transportTypeService.findById(transportationUpdateDto.getTransportType().getId());
 
+        List<Long> ids = transportationUpdateDto.getGoodsType().stream()
+                                                                        .map(GoodsTypeForCreateGoodsDto::getId)
+                                                                        .collect(Collectors.toList());
+        List<GoodsType> goodsTypes = goodsTypeService.findAllByIds(ids);
+
         if(transportType == null){
 
-            RestMessage restMessage = this.restMessageService.findByCode("T001");
+            RestMessage restMessage = restMessageService.findByCode("T001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
+        if(goodsTypes.isEmpty()){
+            RestMessage restMessage = restMessageService.findByCode("G001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
         transportation.setTransportType(transportType);
+        transportation.setGoodsType(goodsTypes);
         transportation.setModel(transportationUpdateDto.getModel());
 
-        this.transportationService.updateTransportation(transportation);
+        transportationService.updateTransportation(transportation);
         TransportationDto transportationDto = ObjectMapperUtils.map(transportation, TransportationDto.class);
 
         return new ResponseEntity<TransportationDto>(transportationDto, HttpStatus.CREATED);
@@ -259,7 +287,7 @@ public class TransportationRestControllerV1 {
         if (transportationUpdateStatusDto == null
                 || transportationUpdateStatusDto.getTransportationStatus() == TransportationStatus.DELETED) {
 
-            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessage restMessage = restMessageService.findByCode("S001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);

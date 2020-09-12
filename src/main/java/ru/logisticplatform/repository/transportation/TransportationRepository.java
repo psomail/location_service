@@ -20,6 +20,8 @@ public interface TransportationRepository extends JpaRepository<Transportation, 
 
     List<Transportation> findAllByUser(User user);
 
+    List<Transportation> findAllByTransportationStatus(TransportationStatus transportationStatus);
+
     Transportation findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(TransportType transportType
                                                                                     ,String model
                                                                                     ,User user

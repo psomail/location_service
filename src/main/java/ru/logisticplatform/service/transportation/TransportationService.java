@@ -15,6 +15,8 @@ public interface TransportationService {
 
     List<Transportation> findAllByUser(User user);
 
+    List<Transportation>  findAllByTransportationStatus(TransportationStatus status);
+
     List<Transportation> findAllByUserAndStatus(User user, TransportationStatus status);
 
     List<Transportation> findAllByUserAndStatusNotLike(User user, TransportationStatus status);

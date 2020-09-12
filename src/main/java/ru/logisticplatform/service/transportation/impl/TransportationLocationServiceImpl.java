@@ -12,6 +12,7 @@ import ru.logisticplatform.service.transportation.TransportationLocationService;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -22,6 +23,31 @@ public class TransportationLocationServiceImpl implements TransportationLocation
     @Autowired
     public TransportationLocationServiceImpl(TransportationLocationRepository transportationLocationRepository) {
         this.transportationLocationRepository = transportationLocationRepository;
+    }
+
+
+    @Override
+    public List<TransportationLocation> findAll() {
+
+        List<TransportationLocation> transportationLocations = transportationLocationRepository.findAll();
+
+        if(transportationLocations.isEmpty()){
+            log.warn("IN TransportationLocationServiceImpl findAll() - no transportationLocations found");
+        }
+        return transportationLocations;
+    }
+
+    @Override
+    public List<TransportationLocation> findAllByCoordinates(Double lonFrom, Double lonTo, Double latFrom, Double latTo) {
+
+        List<TransportationLocation> transportationLocations = transportationLocationRepository
+                                                                    .findAllByLonBetweenAndLatBetween(lonFrom
+                                                                                                        ,lonTo
+                                                                                                        ,latFrom
+                                                                                                        ,latTo);
+
+
+        return null;
     }
 
     @Override
@@ -41,6 +67,22 @@ public class TransportationLocationServiceImpl implements TransportationLocation
     }
 
     @Override
+    public List<TransportationLocation> findAllByTransportTypes(Double lonFrom, Double lonTo, Double latFrom, Double latTo, List<Long> ids) {
+
+        List<TransportationLocation> transportationLocations
+                = transportationLocationRepository.findAllByLonBetweenAndLatBetweenAndTransportation_TransportType_IdIn(lonFrom
+                                                                                                                        ,lonTo
+                                                                                                                        ,latFrom
+                                                                                                                        ,latTo
+                                                                                                                        ,ids);
+        if(transportationLocations.isEmpty()){
+            log.warn("IN TransportationLocationServiceImpl findAllByLonBetweenAndLatBetween() - no transportationLocations found");
+        }
+
+        return transportationLocations;
+    }
+
+    @Override
     public TransportationLocation save(TransportationLocation transportationLocation) {
 
         log.info("IN TransportationLocationServiceImpl create() - transportationLocation" +
@@ -56,7 +98,7 @@ public class TransportationLocationServiceImpl implements TransportationLocation
         Date today = calendar.getTime();
         calendar.add(Calendar.MINUTE, -20);
         Date previousMinute = calendar.getTime();
-        transportationLocationRepository.deleteAllByUpdatedBefore(previousMinute);
+       // transportationLocationRepository.deleteAllByUpdatedBefore(previousMinute);
         log.info("IN TransportationLocationServiceImpl deleteSchedule() - deleted offline transportation");
     }
 }

@@ -40,4 +40,16 @@ public class TransportTypeServiceImpl implements TransportTypeService {
         log.info("IN TransportTypeServiceImpl getAll");
         return transportTypeRepository.findAll();
     }
+
+    @Override
+    public List<TransportType> findByListOfId(List<Long> ids) {
+
+        List<TransportType> transportTypes = transportTypeRepository.findAllByIdIn(ids);
+
+        if(transportTypes.isEmpty()){
+            log.warn("IN TransportTypeServiceImpl findByListOfId () - transportTypes are not found");
+        }
+
+        return transportTypes;
+    }
 }

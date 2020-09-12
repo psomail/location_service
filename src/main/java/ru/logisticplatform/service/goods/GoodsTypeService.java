@@ -9,4 +9,6 @@ public interface GoodsTypeService {
     GoodsType findById(Long id);
 
     List<GoodsType> findAll();
+
+    List<GoodsType> findAllByIds(List<Long> ids);
 }

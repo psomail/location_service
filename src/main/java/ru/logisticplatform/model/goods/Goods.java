@@ -54,9 +54,6 @@ public class Goods extends BaseEntity {
     @ManyToMany(mappedBy = "goods", fetch = FetchType.LAZY)
     List<Order> orders;
 
-    @ManyToMany(mappedBy = "goods", fetch = FetchType.LAZY)
-    List<Transportation> transportations;
-
     @Override
     public String toString() {
         return "Goods{" +

@@ -46,6 +46,23 @@ public class GoodsTypeServiceImpl implements GoodsTypeService {
     @Override
     public List<GoodsType> findAll() {
         log.info("IN GoodsTypeServiceImpl findAll");
+
         return goodsTypeRepository.findAll();
+    }
+
+    /**
+     *
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<GoodsType> findAllByIds(List<Long> ids){
+
+        List<GoodsType> goodsTypes = goodsTypeRepository.findAllByIdIn(ids);
+
+        if (goodsTypes.isEmpty()){
+            log.warn("IN GoodsTypeServiceImpl findAllByIds() - no goodsType found by id list");
+        }
+        return goodsTypes;
     }
 }
