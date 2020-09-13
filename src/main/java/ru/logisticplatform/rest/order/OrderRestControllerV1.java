@@ -15,6 +15,7 @@ import ru.logisticplatform.dto.goods.GoodsForCreateOrderDto;
 import ru.logisticplatform.dto.order.CreateOrderDto;
 import ru.logisticplatform.dto.order.OrderDto;
 import ru.logisticplatform.dto.order.UpdateOrderDto;
+import ru.logisticplatform.dto.order.UpdateOrderStatusDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.goods.Goods;
@@ -165,7 +166,7 @@ public class OrderRestControllerV1 {
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
-        calendar.add(Calendar.MINUTE, +30);
+        calendar.add(Calendar.MINUTE, +60);
         Date orderTimeMin = calendar.getTime();
         Date orderTime = createOrderDto.getOrderDate();
 
@@ -227,7 +228,7 @@ public class OrderRestControllerV1 {
 
         Calendar calendar = Calendar.getInstance();
         Date today = calendar.getTime();
-        calendar.add(Calendar.MINUTE, +30);
+        calendar.add(Calendar.MINUTE, +60);
         Date orderTimeMin = calendar.getTime();
         Date orderTime = updateOrderDto.getOrderDate();
 
@@ -248,5 +249,86 @@ public class OrderRestControllerV1 {
         OrderDto orderDto = ObjectMapperUtils.map(updatingOrder, OrderDto.class);
 
         return new ResponseEntity<OrderDto>(orderDto, HttpStatus.OK);
+    }
+
+    /**
+     *
+     * @param authentication
+     * @param updateOrderStatusDto
+     * @return
+     */
+    @PutMapping(value = "/updatestatus/", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('CUSTOMER')")
+    public ResponseEntity<?> updateOrderStatus(Authentication authentication,
+                                               @RequestBody UpdateOrderStatusDto updateOrderStatusDto){
+
+        if(updateOrderStatusDto == null || updateOrderStatusDto.getOrderStatus() == OrderStatus.DELETED){
+            RestMessage restMessage = restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+
+        if(user == null || user.getUserStatus() == UserStatus.DELETED){
+            RestMessage restMessage = restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Order order = orderService.findById(updateOrderStatusDto.getId());
+
+        if(order == null || order.getOrderStatus() == OrderStatus.DELETED
+                            || user.getId() != order.getUser().getId()){
+
+            RestMessage restMessage = restMessageService.findByCode("Or003");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        order.setOrderStatus(updateOrderStatusDto.getOrderStatus());
+
+        orderService.updateOrder(order);
+
+        OrderDto orderDto = ObjectMapperUtils.map(order, OrderDto.class);
+
+        return new ResponseEntity<OrderDto>(orderDto, HttpStatus.OK);
+    }
+
+
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> deleteOrder(Authentication authentication, @PathVariable("id") Long id){
+
+        if(id == null){
+            RestMessage restMessage = restMessageService.findByCode("S001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userService.findByUsername(authentication.getName());
+        if(user == null || user.getUserStatus() == UserStatus.DELETED){
+            RestMessage restMessage = restMessageService.findByCode("U001");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Order order = orderService.findById(id);
+
+        if(order == null || order.getOrderStatus() == OrderStatus.DELETED
+                || user.getId() != order.getUser().getId()){
+
+            RestMessage restMessage = restMessageService.findByCode("Or003");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        order.setOrderStatus(OrderStatus.DELETED);
+
+        orderService.updateOrder(order);
+
+        RestMessage restMessage = restMessageService.findByCode("Or004");
+        RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+
+        return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.OK);
     }
 }

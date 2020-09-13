@@ -16,11 +16,18 @@ import ru.logisticplatform.dto.deal.DealDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.deal.Deal;
+import ru.logisticplatform.model.goods.Goods;
+import ru.logisticplatform.model.order.Order;
+import ru.logisticplatform.model.order.OrderStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.service.RestMessageService;
 import ru.logisticplatform.service.deal.DealService;
+import ru.logisticplatform.service.order.OrderService;
 import ru.logisticplatform.service.user.UserService;
+
+import java.util.Calendar;
+import java.util.Date;
 
 
 @RestController
@@ -28,15 +35,18 @@ import ru.logisticplatform.service.user.UserService;
 public class DealRestControllerV1 {
 
     private final DealService dealService;
+    private final OrderService orderService;
     private final RestMessageService restMessageService;
     private final UserService userService;
 
     @Autowired
     public DealRestControllerV1(DealService dealService
+                                ,OrderService orderService
                                 ,UserService userService
                                 ,RestMessageService restMessageService){
 
         this.dealService = dealService;
+        this.orderService = orderService;
         this.restMessageService = restMessageService;
         this.userService = userService;
     }
@@ -61,7 +71,7 @@ public class DealRestControllerV1 {
 
         User user = userService.findByUsername(authentication.getName());
 
-        if (user == null || user.getUserStatus() == UserStatus.NOT_ACTIVE || user.getUserStatus() == UserStatus.DELETED){
+        if (user == null || user.getUserStatus() == UserStatus.DELETED){
             RestMessage restMessage = this.restMessageService.findByCode("U001");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -69,7 +79,31 @@ public class DealRestControllerV1 {
 
         Deal deal = ObjectMapperUtils.map(createDealDto, Deal.class);
 
-        dealService.createDeal(deal);
+        Order order = orderService.findById(createDealDto.getOrder().getId());
+
+        if(order == null || order.getOrderStatus() == OrderStatus.DELETED
+                        || user.getId() != order.getUser().getId()){
+
+            RestMessage restMessage = restMessageService.findByCode("Or003");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+        calendar.add(Calendar.MINUTE, +60);
+        Date orderTimeMin = calendar.getTime();
+        Date orderTime = order.getOrderDate();
+
+        if(orderTime.before(orderTimeMin)){
+            RestMessage restMessage = this.restMessageService.findByCode("Or002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+      //  Goods goods = order.getGoods().
+
+ //       dealService.createDeal(deal);
 
         DealDto dealDto = ObjectMapperUtils.map(deal, DealDto.class);
 

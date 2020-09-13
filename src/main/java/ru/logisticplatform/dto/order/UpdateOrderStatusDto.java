@@ -15,17 +15,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class OrderDto {
-
+public class UpdateOrderStatusDto {
     Long id;
-    List<GoodsForCreateOrderDto> goods;
-    Double latFrom;
-    Double lonFrom;
-    Double latTo;
-    Double lonTo;
-
-    @JsonFormat(pattern = "dd-MM-yyyy hh:mm:ss", timezone="Europe/Moscow")
-    Date orderDate;
-
     OrderStatus orderStatus;
 }

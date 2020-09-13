@@ -651,4 +651,11 @@
     </insert>
     </changeSet>
 
+    <changeSet id="1.0.26" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="Or004"/>
+            <column name="description" value="The order deleted"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
