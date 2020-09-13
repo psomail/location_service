@@ -115,13 +115,41 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsRepository.findAll();
     }
 
+    @Override
+    public List<Goods> findAllByIds(List<Long> ids) {
+
+        List<Goods> goods = goodsRepository.findAllByIdIn(ids);
+
+        if(goods.isEmpty()){
+            log.warn("IN GoodsServiceImpl findAllByIds() - no goods found by id list");
+        }
+        return goods;
+    }
+
+
+    /**
+     *
+     * @param user
+     * @param ids
+     * @return
+     */
+    @Override
+    public List<Goods> findAllByUserAndIdIn(User user, List<Long> ids) {
+
+        List<Goods> goods = goodsRepository.findAllByUserAndIdIn(user, ids);
+
+        if(goods.isEmpty()){
+            log.warn("IN GoodsServiceImpl findAllByUserAndIdIn() - no goods found by id list and user: {}", user.getUsername());
+        }
+        return goods;
+    }
+
     /**
      *
      * @param user
      * @param status
      * @return
      */
-
     @Override
     public List<Goods> findAllByUserAndStatusNotLike(User user, GoodsStatus status) {
 
@@ -135,6 +163,12 @@ public class GoodsServiceImpl implements GoodsService {
         return goods;
     }
 
+    /**
+     *
+     * @param user
+     * @param status
+     * @return
+     */
     @Override
     public List<Goods> findAllByUserAndStatus(User user, GoodsStatus status) {
 
@@ -153,13 +187,12 @@ public class GoodsServiceImpl implements GoodsService {
      * @param goods
      * @return
      */
-
     @Override
     public Goods createGoods(Goods goods) {
 
         Goods createdGoods = goodsRepository.save(goods);
 
-        log.info("IN GoodsServiceImpl createGoods - goods: {} successfully registered", createdGoods);
+        log.info("IN GoodsServiceImpl createGoods() - goods id: {} successfully registered", createdGoods.getId());
 
         return createdGoods;
     }
@@ -170,8 +203,6 @@ public class GoodsServiceImpl implements GoodsService {
      * @param goods
      * @return
      */
-
-
     @Override
     public Goods updateGoods(Goods goods) {
 
@@ -182,6 +213,10 @@ public class GoodsServiceImpl implements GoodsService {
         return updateGoods;
     }
 
+    /**
+     *
+     * @param id
+     */
     @Override
     public void delete(Long id) {
 

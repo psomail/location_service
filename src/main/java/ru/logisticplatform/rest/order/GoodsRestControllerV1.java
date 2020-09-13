@@ -171,7 +171,7 @@ public class GoodsRestControllerV1 {
         goods.setUser(user);
         goods.setGoodsStatus(GoodsStatus.CREATED);
 
-        this.goodsService.createGoods(goods);
+        goodsService.createGoods(goods);
 
         GoodsDto createdGoodsDto = ObjectMapperUtils.map(goods, GoodsDto.class);
 

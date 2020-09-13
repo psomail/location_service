@@ -34,14 +34,14 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public Transportation findById(Long id) {
 
-        Transportation transportation = this.transportationRepository.findById(id).orElse(null);
+        Transportation transportation = transportationRepository.findById(id).orElse(null);
 
         if (transportation == null){
-            log.warn("IN TransportationServiceImpl findById - no transportation found by id: {}", id);
+            log.warn("IN TransportationServiceImpl findById() - no transportation found by id: {}", id);
             return null;
         }
 
-        log.info("IN TransportationServiceImpl findById - transportation: {} found by id: {}", transportation, id);
+        log.info("IN TransportationServiceImpl findById() - transportation: {} found by id: {}", transportation, id);
 
         return transportation;
     }
@@ -54,10 +54,10 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public List<Transportation> findAll() {
 
-        List<Transportation> transportations = this.transportationRepository.findAll();
+        List<Transportation> transportations = transportationRepository.findAll();
 
         if (transportations.isEmpty()){
-            log.warn("IN TransportationServiceImpl findAllByUser - no transportations found ");
+            log.warn("IN TransportationServiceImpl findAllByUser() - no transportations found ");
         }
 
         return transportations;
@@ -66,10 +66,10 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public List<Transportation> findAllByTransportationStatus(TransportationStatus status) {
 
-        List<Transportation> transportations = this.transportationRepository.findAllByTransportationStatus(status);
+        List<Transportation> transportations = transportationRepository.findAllByTransportationStatus(status);
 
         if (transportations.isEmpty()){
-            log.warn("IN TransportationServiceImpl findAllByTransportationStatus - no transportations found by status: {}", status.toString());
+            log.warn("IN TransportationServiceImpl findAllByTransportationStatus() - no transportations found by status: {}", status.toString());
         }
 
         return transportations;
@@ -96,7 +96,7 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public List<Transportation> findAllByUserAndStatus(User user, TransportationStatus status) {
 
-        List<Transportation> transportations = this.transportationRepository.findAllByUserAndTransportationStatus(user, status);
+        List<Transportation> transportations = transportationRepository.findAllByUserAndTransportationStatus(user, status);
 
         if (transportations.isEmpty()){
             log.warn("IN TransportationServiceImpl findAllByUserAndStatus - no transportations found by user: {} " +
@@ -109,7 +109,7 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public List<Transportation> findAllByUserAndStatusNotLike(User user, TransportationStatus status) {
 
-        List<Transportation> transportations = this.transportationRepository.findAllByUserAndTransportationStatusNotLike(user, status);
+        List<Transportation> transportations = transportationRepository.findAllByUserAndTransportationStatusNotLike(user, status);
 
         if (transportations.isEmpty()){
             log.warn("IN TransportationServiceImpl findAllByUserAndStatusNotLike() - no transportations found by user: {} " +
@@ -131,7 +131,7 @@ public class TransportationServiceImpl implements TransportationService {
                                                                                         ,String model
                                                                                         ,User user
                                                                                         ,TransportationStatus transportationStatus){
-        Transportation transportation = this.transportationRepository
+        Transportation transportation = transportationRepository
                                             .findByTransportTypeAndModelAndUserAndTransportationStatusNotLike(transportType
                                                                                                                 ,model
                                                                                                                 ,user
@@ -156,7 +156,7 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public Transportation updateTransportation(Transportation transportation) {
 
-        this.transportationRepository.save(transportation);
+        transportationRepository.save(transportation);
         log.info("IN TransportationServiceImpl updateTransportation() - transportation ID: {} successfully updated", transportation.getId());
 
         return transportation;

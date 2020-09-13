@@ -22,6 +22,10 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
 
     List<Goods> findAllByUser(User user);
 
+    List<Goods> findAllByIdIn(List<Long> ids);
+
+    List<Goods> findAllByUserAndIdIn(User user, List<Long> ids);
+
     List<Goods> findAllByNameAndGoodsTypeAndLenghtAndWidthAndHeightAndVolumeAndCarryingAndUser(String name
                                                                                                 ,GoodsType goodsType
                                                                                                 ,Double lenght
