@@ -16,14 +16,19 @@ import ru.logisticplatform.dto.deal.DealDto;
 import ru.logisticplatform.dto.utils.ObjectMapperUtils;
 import ru.logisticplatform.model.RestMessage;
 import ru.logisticplatform.model.deal.Deal;
+import ru.logisticplatform.model.deal.DealConfirmStatus;
+import ru.logisticplatform.model.deal.DealStatus;
 import ru.logisticplatform.model.goods.Goods;
 import ru.logisticplatform.model.order.Order;
 import ru.logisticplatform.model.order.OrderStatus;
+import ru.logisticplatform.model.transportation.Transportation;
+import ru.logisticplatform.model.transportation.TransportationStatus;
 import ru.logisticplatform.model.user.User;
 import ru.logisticplatform.model.user.UserStatus;
 import ru.logisticplatform.service.RestMessageService;
 import ru.logisticplatform.service.deal.DealService;
 import ru.logisticplatform.service.order.OrderService;
+import ru.logisticplatform.service.transportation.TransportationService;
 import ru.logisticplatform.service.user.UserService;
 
 import java.util.Calendar;
@@ -36,17 +41,20 @@ public class DealRestControllerV1 {
 
     private final DealService dealService;
     private final OrderService orderService;
+    private final TransportationService transportationService;
     private final RestMessageService restMessageService;
     private final UserService userService;
 
     @Autowired
     public DealRestControllerV1(DealService dealService
                                 ,OrderService orderService
+                                ,TransportationService transportationService
                                 ,UserService userService
                                 ,RestMessageService restMessageService){
 
         this.dealService = dealService;
         this.orderService = orderService;
+        this.transportationService = transportationService;
         this.restMessageService = restMessageService;
         this.userService = userService;
     }
@@ -77,14 +85,18 @@ public class DealRestControllerV1 {
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-        Deal deal = ObjectMapperUtils.map(createDealDto, Deal.class);
-
         Order order = orderService.findById(createDealDto.getOrder().getId());
 
         if(order == null || order.getOrderStatus() == OrderStatus.DELETED
                         || user.getId() != order.getUser().getId()){
 
             RestMessage restMessage = restMessageService.findByCode("Or003");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        if(order.getOrderStatus() != OrderStatus.ACTIVE){
+            RestMessage restMessage = restMessageService.findByCode("Or005");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
@@ -101,13 +113,32 @@ public class DealRestControllerV1 {
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
-      //  Goods goods = order.getGoods().
+        Transportation transportation = transportationService.findById(createDealDto.getTransportation().getId());
 
- //       dealService.createDeal(deal);
+        if(transportation == null || transportation.getTransportationStatus() == TransportationStatus.DELETED){
+            RestMessage restMessage = restMessageService.findByCode("T002");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
 
-        DealDto dealDto = ObjectMapperUtils.map(deal, DealDto.class);
+        if(transportation.getTransportationStatus() != TransportationStatus.ACTIVE){
+            RestMessage restMessage = restMessageService.findByCode("T006");
+            RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
+            return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
+        }
+
+        Deal deal = ObjectMapperUtils.map(createDealDto, Deal.class);
+        deal.setOrder(order);
+        deal.setTransportation(transportation);
+        deal.setDealDate(orderTime);
+        deal.setDealCustomerConfirm(DealConfirmStatus.YES);
+        deal.setDealContractorConfirm(DealConfirmStatus.NO);
+        deal.setDealStatus(DealStatus.CREATED);
+
+        Deal createdDeal = dealService.createDeal(deal);
+
+        DealDto dealDto = ObjectMapperUtils.map(createdDeal, DealDto.class);
 
         return new ResponseEntity<DealDto>(dealDto, HttpStatus.CREATED);
     }
-
 }

@@ -52,4 +52,20 @@ public class Order extends BaseEntity {
 
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     List<Deal> deals;
+
+
+    @Override
+    public String toString() {
+        return "Order{" +
+            //    "user=" + user +
+             //   ", goods=" + goods +
+                ", latFrom=" + latFrom +
+                ", lonFrom=" + lonFrom +
+                ", latTo=" + latTo +
+                ", lonTo=" + lonTo +
+                ", orderDate=" + orderDate +
+                ", orderStatus=" + orderStatus +
+            //    ", deals=" + deals +
+                '}';
+    }
 }

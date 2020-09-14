@@ -28,10 +28,10 @@ public class DealServiceImpl implements DealService {
     @Override
     public Deal createDeal(Deal deal){
 
-        dealRepository.save(deal);
+        Deal createdDeal = dealRepository.save(deal);
 
-        log.info("IN DealServiceImpl createDeal() - deal ID: {} successfully created", deal.getId());
+        log.info("IN DealServiceImpl createDeal() - deal ID: {} successfully created", createdDeal.getId());
 
-    return deal;
+    return createdDeal;
     }
 }

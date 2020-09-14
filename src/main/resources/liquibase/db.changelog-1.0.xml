@@ -658,4 +658,11 @@
         </insert>
     </changeSet>
 
+    <changeSet id="1.0.27" author="serg.perm">
+        <insert tableName="rest_message">
+            <column name="code" value="Or005"/>
+            <column name="description" value="The active order is not found"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

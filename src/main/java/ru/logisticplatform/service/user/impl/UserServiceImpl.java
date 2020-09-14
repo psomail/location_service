@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsername(String username) {
         User user = userRepository.findByUsername(username);
-        log.info("IN UserServiceImpl findByUsername - user: {} found by userName: {}", user, username);
+        log.info("IN UserServiceImpl findByUsername() - user id: {} found by userName: {}", user.getId(), username);
         return user;
     }
 

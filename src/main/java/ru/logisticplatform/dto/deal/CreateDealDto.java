@@ -5,6 +5,8 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
+import ru.logisticplatform.dto.order.OrderForCreateDealDto;
+import ru.logisticplatform.dto.transportation.TransportationForCreateDealDto;
 import ru.logisticplatform.model.BaseEntity;
 import ru.logisticplatform.model.deal.DealConfirmStatus;
 import ru.logisticplatform.model.deal.DealStatus;
@@ -19,7 +21,6 @@ import java.util.Date;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CreateDealDto {
-
-    Order order;
-    Transportation transportation;
+    OrderForCreateDealDto order;
+    TransportationForCreateDealDto transportation;
 }

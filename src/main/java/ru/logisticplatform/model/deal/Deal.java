@@ -43,4 +43,17 @@ public class Deal extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     DealStatus dealStatus = DealStatus.CREATED;
+
+
+    @Override
+    public String toString() {
+        return "Deal{" +
+               // "order=" + order +
+               // ", transportation=" + transportation +
+                ", dealDate=" + dealDate +
+                ", dealCustomerConfirm=" + dealCustomerConfirm +
+                ", dealContractorConfirm=" + dealContractorConfirm +
+                ", dealStatus=" + dealStatus +
+                '}';
+    }
 }
