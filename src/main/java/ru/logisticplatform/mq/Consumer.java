@@ -23,7 +23,7 @@ public class Consumer {
         this.roleService = roleService;
     }
 
-    @RabbitListener(queues = "create.user.queue")
+    @RabbitListener(queues = "${create.user.queue}")
         public void createUser(UserMq userMq){
 
         User user = userService.findByUsername(userMq.getUsername());
@@ -39,7 +39,7 @@ public class Consumer {
 
     }
 
-    @RabbitListener(queues = "update.user.queue")
+    @RabbitListener(queues = "${update.user.queue}")
     public void updateUser(UserMq userMq){
 
         userMq.getRoles().forEach(role->role.setId(roleService.findByRoleName(role.getName()).getId()));
@@ -48,7 +48,7 @@ public class Consumer {
         log.info("IN Consumer updateUser() - user: {} successfully updated", userMq.getUsername());
     }
 
-    @RabbitListener(queues = "delete.user.queue")
+    @RabbitListener(queues = "${delete.user.queue}")
     public void deleteUser(UserMq userMq){
 
        User userDelete = this.userService.findByUsername(userMq.getUsername());

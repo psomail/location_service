@@ -1,11 +1,9 @@
 package ru.logisticplatform.dto.goods;
 
-import ru.logisticplatform.model.goods.Goods;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-import ru.logisticplatform.model.goods.GoodsStatus;
 
 /**
  * DTO class for user requests by {@link Goods}

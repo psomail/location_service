@@ -1,10 +1,8 @@
 package ru.logisticplatform.model.user;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.BaseEntity;
-import ru.logisticplatform.model.goods.Goods;
 import ru.logisticplatform.model.order.Order;
 import ru.logisticplatform.model.transportation.Transportation;
 

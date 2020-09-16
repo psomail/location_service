@@ -4,8 +4,6 @@ package ru.logisticplatform.model.transportation;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import ru.logisticplatform.model.BaseEntity;
-import ru.logisticplatform.model.deal.Deal;
-import ru.logisticplatform.model.goods.Goods;
 import ru.logisticplatform.model.goods.GoodsType;
 import ru.logisticplatform.model.user.User;
 
@@ -42,9 +40,6 @@ public class Transportation extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "goodstype_id", referencedColumnName = "id")})
     List<GoodsType> goodsType;
 
-    @OneToMany(mappedBy = "transportation", fetch = FetchType.LAZY)
-    List<Deal> deals;
-
     @Override
     public String toString() {
         return "Transportation{" +
@@ -52,8 +47,6 @@ public class Transportation extends BaseEntity {
           //      ", transportType=" + transportType +
                 ", model='" + model + '\'' +
                 ", transportationStatus=" + transportationStatus +
-          //      ", goods=" + goods +
-          //      ", deals=" + deals +
                 '}';
     }
 }

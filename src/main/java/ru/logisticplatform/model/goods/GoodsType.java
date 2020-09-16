@@ -19,10 +19,6 @@ public class GoodsType extends BaseEntity {
     @Column(name = "name")
     String name;
 
-    @OneToMany(mappedBy = "goodsType", fetch = FetchType.LAZY)
-    //@JsonIgnore
-    List<Goods> goods;
-
     @ManyToMany(mappedBy = "goodsType", fetch = FetchType.LAZY)
     List<Transportation> transportations;
 

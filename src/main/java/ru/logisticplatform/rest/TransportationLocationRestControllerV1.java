@@ -1,4 +1,4 @@
-package ru.logisticplatform.rest.transportation;
+package ru.logisticplatform.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -64,21 +64,19 @@ public class TransportationLocationRestControllerV1{
     @PreAuthorize("hasRole('CONTRACTOR')")
     public ResponseEntity<?> myLocations(Authentication authentication){
 
-        User user = this.userService.findByUsername(authentication.getName());
+        User user = userService.findByUsername(authentication.getName());
 
         if (user == null || user.getUserStatus() == UserStatus.NOT_ACTIVE
                          || user.getUserStatus() == UserStatus.DELETED){
-
-            RestMessage restMessage = this.restMessageService.findByCode("U003");
+            RestMessage restMessage = restMessageService.findByCode("U003");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
-
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
 
         List<Transportation> transportations = transportationService.findAllByUserAndStatus(user, TransportationStatus.ACTIVE);
 
         if(transportations.isEmpty()){
-            RestMessage restMessage = this.restMessageService.findByCode("T006");
+            RestMessage restMessage = restMessageService.findByCode("T006");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -88,7 +86,7 @@ public class TransportationLocationRestControllerV1{
 
         if(transportationLocation == null){
 
-            RestMessage restMessage = this.restMessageService.findByCode("T007");
+            RestMessage restMessage = restMessageService.findByCode("T007");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -113,7 +111,7 @@ public class TransportationLocationRestControllerV1{
                                                          @RequestBody TransportationLocationSendDto transportationLocationSendDto){
         if (transportationLocationSendDto == null) {
 
-            RestMessage restMessage = this.restMessageService.findByCode("S001");
+            RestMessage restMessage = restMessageService.findByCode("S001");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -125,7 +123,7 @@ public class TransportationLocationRestControllerV1{
                 || user.getUserStatus() == UserStatus.DELETED
                 || user.getUserStatus() == UserStatus.NOT_ACTIVE) {
 
-            RestMessage restMessage = this.restMessageService.findByCode("U003");
+            RestMessage restMessage = restMessageService.findByCode("U003");
             RestMessageDto restMessageDto = ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -134,7 +132,7 @@ public class TransportationLocationRestControllerV1{
         List<Transportation> transportations = transportationService.findAllByUserAndStatus(user, TransportationStatus.ACTIVE);
 
         if(transportations.isEmpty()){
-            RestMessage restMessage = this.restMessageService.findByCode("T006");
+            RestMessage restMessage = restMessageService.findByCode("T006");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
 
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
@@ -174,7 +172,7 @@ public class TransportationLocationRestControllerV1{
         User user = this.userService.findByUsername(authentication.getName());
 
         if (user == null || user.getUserStatus() == UserStatus.NOT_ACTIVE || user.getUserStatus() == UserStatus.DELETED){
-            RestMessage restMessage = this.restMessageService.findByCode("U001");
+            RestMessage restMessage = restMessageService.findByCode("U001");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
@@ -199,7 +197,7 @@ public class TransportationLocationRestControllerV1{
                                                                                                                     ,latTo
                                                                                                                     ,ids);
         if(transportationLocations.isEmpty()){
-            RestMessage restMessage = this.restMessageService.findByCode("T009");
+            RestMessage restMessage = restMessageService.findByCode("T009");
             RestMessageDto restMessageDto= ObjectMapperUtils.map(restMessage, RestMessageDto.class);
             return new ResponseEntity<RestMessageDto>(restMessageDto, HttpStatus.NOT_FOUND);
         }
